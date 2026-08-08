@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { invitation } from "@/data/invitation";
 import MotionProvider from "@/components/motion/MotionProvider";
+import Ambience from "@/components/Ambience";
 import EnvelopeGate from "@/components/EnvelopeGate";
 import InvitationHero from "@/components/InvitationHero";
 import ScriptureSection from "@/components/ScriptureSection";
@@ -20,6 +21,8 @@ const PhotoGallery = dynamic(() => import("@/components/PhotoGallery"));
 export default function Page() {
   return (
     <MotionProvider>
+      {/* Ambient layer sits behind every scene. */}
+      <Ambience />
       <EnvelopeGate enabled={invitation.options.envelope} />
       <SceneIndicator />
 

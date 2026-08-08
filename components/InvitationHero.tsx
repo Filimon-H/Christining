@@ -35,9 +35,17 @@ export default function InvitationHero() {
         style={{ bottom: "calc(var(--safe-bottom) + 0.5rem)" }}
       />
 
-      <div className="flex w-full max-w-invitation flex-col items-center text-center">
+      {/*
+       * The invitation sits on a barely-there mount — a hairline panel with a
+       * lighter fill and gold corner marks. It gives the type an edge to sit
+       * inside, which is what the printed reference has and a bare centred
+       * column does not.
+       */}
+      <div className="card-mount corner-marks flex w-full max-w-invitation flex-col items-center px-lg py-2xl text-center">
         <Reveal trigger="mount" duration={1.1} y={0}>
-          <OrthodoxCross size={38} />
+          <span className="cross-halo inline-block">
+            <OrthodoxCross size={40} />
+          </span>
         </Reveal>
 
         <Reveal trigger="mount" delay={0.35} className="mt-xl">
@@ -79,7 +87,7 @@ export default function InvitationHero() {
           y={0}
           className="mt-xl w-full max-w-rule-lg"
         >
-          <div className="rule" />
+          <div className="rule-ornate" />
         </Reveal>
 
         <Reveal trigger="mount" delay={1.0} className="mt-lg">

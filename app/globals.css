@@ -232,6 +232,167 @@
       rgb(250 247 240 / 0)
     );
   }
+
+  /* ── Ambient layer ──────────────────────────
+     Slow counter-drifting washes so the cream reads as lit paper.
+     Amplitude is a few percent; the cycle is 22–28s.
+     ─────────────────────────────────────────── */
+  .ambient-wash {
+    position: absolute;
+    width: 78vmax;
+    height: 78vmax;
+    border-radius: 50%;
+    filter: blur(60px);
+    will-change: transform, opacity;
+  }
+
+  .ambient-wash-a {
+    top: -26vmax;
+    left: -22vmax;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgb(181 154 91 / 0.09),
+      rgb(181 154 91 / 0) 68%
+    );
+    animation: drift-a 24s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .ambient-wash-b {
+    right: -28vmax;
+    bottom: -30vmax;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgb(216 204 182 / 0.14),
+      rgb(216 204 182 / 0) 66%
+    );
+    animation: drift-b 28s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  /* Settles the page edges so corners never read as empty. */
+  .ambient-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      120% 85% at 50% 45%,
+      transparent 55%,
+      rgb(112 98 74 / 0.055) 100%
+    );
+  }
+
+  /* Hairline rule with a small diamond at its centre — a printed rule,
+     rather than a plain divider. */
+  .rule-ornate {
+    position: relative;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--line) 18%,
+      var(--accent) 50%,
+      var(--line) 82%,
+      transparent
+    );
+  }
+
+  .rule-ornate::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  /* Soft gold halo behind the cross, so it sits in light rather than on a
+     flat field. */
+  .cross-halo {
+    position: relative;
+  }
+
+  .cross-halo::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 190%;
+    height: 190%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle,
+      rgb(181 154 91 / 0.13),
+      rgb(181 154 91 / 0) 70%
+    );
+    pointer-events: none;
+  }
+
+  /* The invitation card: barely-there panel that lifts the text off the page.
+     No hard border, no drop shadow — just a hairline and a lighter fill, the
+     way an inner card sits on a mount. */
+  .card-mount {
+    position: relative;
+    background: linear-gradient(
+      to bottom,
+      rgb(255 253 249 / 0.72),
+      rgb(255 253 249 / 0.34)
+    );
+    border: 1px solid rgb(216 204 182 / 0.5);
+    border-radius: 2px;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.6) inset,
+      0 18px 50px -32px rgb(112 98 74 / 0.28);
+  }
+
+  /* Gold corner brackets, drawn with borders on pseudo-elements. */
+  .corner-marks::before,
+  .corner-marks::after {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-color: var(--accent);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .corner-marks::before {
+    top: 10px;
+    left: 10px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+  }
+
+  .corner-marks::after {
+    right: 10px;
+    bottom: 10px;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+  }
+}
+
+@keyframes drift-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate3d(4%, 3%, 0) scale(1.06);
+    opacity: 1;
+  }
+}
+
+@keyframes drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.04);
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(-4%, -3%, 0) scale(1);
+    opacity: 0.82;
+  }
 }
 
 @keyframes kenburns {
@@ -282,6 +443,13 @@
   }
 
   .ken-burns {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* The washes stay — as static gradients, so the page keeps its depth
+     without any drift. */
+  .ambient-wash {
     animation: none !important;
     transform: none !important;
   }

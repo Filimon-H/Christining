@@ -91,34 +91,40 @@ export const invitation: Invitation = {
   },
 
   parents: {
-    names: "[MOTHER'S NAME] & Filmon",
+    names: "Nardos Mesfin & Filimon Haylemariyam",
     signature: "Mommy & Daddy",
   },
 
   event: {
-    // ⚠️ Replace with the real date/time. Drives the countdown.
-    isoDate: "2026-09-12T10:00:00+03:00",
-    dayOfWeek: "[DAY OF WEEK]",
-    dateLabel: "[DATE]",
-    timeLabel: "[TIME]",
+    // Sunday 23 August 2026, midday. Ethiopia is UTC+3 year-round.
+    isoDate: "2026-08-23T12:30:00+03:00",
+    dayOfWeek: "Sunday",
+    dateLabel: "23 August 2026",
+    timeLabel: "Lunch Time",
     year: "2026",
   },
 
+  /*
+   * The celebration is at the family home rather than a church hall, so this
+   * block carries the house location. `name` is what guests read first.
+   */
   church: {
-    name: "[CHURCH NAME]",
-    addressLines: ["[STREET ADDRESS]", "[CITY, COUNTRY]"],
-    locality: "[CITY]",
+    name: "At Our Home",
+    addressLines: [
+      "Near Assela Menahriya",
+      "Next to Highleahue School",
+    ],
+    locality: "Near Assela Menahriya",
   },
 
-  // Delete this whole block if there is no reception.
-  reception: {
-    name: "[RECEPTION VENUE]",
-    addressLines: ["[RECEPTION ADDRESS]"],
-    timeLabel: "[RECEPTION TIME]",
-  },
+  // No separate reception — the baptism celebration is the gathering at home.
+  reception: undefined,
 
   maps: {
-    google: "https://www.google.com/maps/search/?api=1&query=[CHURCH+NAME]",
+    // ⚠️ Replace with a dropped pin on the house so relatives navigate exactly.
+    // In Google Maps: long-press the spot → Share → Copy link.
+    google:
+      "https://www.google.com/maps/search/?api=1&query=Highleahue+School+Assela",
     apple: undefined, // auto-generated from the address if left undefined
   },
 
@@ -191,9 +197,9 @@ export const invitation: Invitation = {
 
   options: {
     envelope: true,
-    // Save the seal artwork to public/seal.png (transparent background) and
-    // set this to "/seal.png" to use it in place of the drawn seal.
-    sealImage: undefined,
+    // The supplied seal artwork, with its grey backdrop keyed out by
+    // scripts/cutout-seal.mjs. Set to undefined to fall back to the drawn seal.
+    sealImage: "/seal.png",
     countdown: false, // off by default — keeps the tone intimate rather than event-like
     music: false,
     audioSrc: undefined,

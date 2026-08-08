@@ -165,8 +165,8 @@ export default {
         prose: "36rem",
         location: "30rem",
         closing: "32rem",
-        /** The envelope cover */
-        envelope: "22rem",
+        /** The envelope cover — nearly full-bleed on a phone, generous on desktop */
+        envelope: "40rem",
         /** Divider widths */
         "rule-sm": "7rem",
         "rule-md": "9rem",

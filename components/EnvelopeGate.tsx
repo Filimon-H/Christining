@@ -7,8 +7,21 @@ import { invitation } from "@/data/invitation";
 import WaxSeal from "./WaxSeal";
 import { EASE_GENTLE } from "./motion/Reveal";
 
-/** Rendered size of the seal, in px. */
-const SEAL_SIZE = 92;
+/**
+ * Rendered size of the seal, in px.
+ *
+ * The supplied artwork carries lettering around its rim, so it needs more room
+ * than the drawn seal did — at 92px "INVITATION TO AMALDAN FILMON" was an
+ * illegible smudge.
+ */
+const SEAL_SIZE = 150;
+
+/**
+ * The seal scales with the envelope rather than sitting at a fixed px size, so
+ * it stays proportionate from a 320px phone up to a wide desktop.
+ * 22% of the envelope width matches how a real seal sits on a card.
+ */
+const SEAL_WIDTH = "22%";
 
 const STORAGE_KEY = "baptism-envelope-opened";
 
@@ -19,12 +32,16 @@ const LIFT_MS = 1000;
 
 /**
  * Envelope proportions, in the SVG's own coordinate space.
- * A 3:2 landscape card. The flap descends to 56% of the height, and the seal
- * sits on that point — all three numbers derive from these constants, so the
- * geometry can't drift out of alignment.
+ *
+ * 4:3 rather than the usual 3:2 landscape — on a tall phone a wide, shallow
+ * envelope leaves large empty bands above and below, whereas this fills the
+ * screen the way a card held in both hands would.
+ *
+ * The flap descends to 56% of the height and the seal sits on that point; both
+ * derive from these constants, so the geometry cannot drift out of alignment.
  */
 const W = 300;
-const H = 200;
+const H = 225;
 const FLAP_Y = H * 0.56;
 
 type Phase = "closed" | "opening" | "gone";
@@ -99,7 +116,9 @@ export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
     <AnimatePresence>
       {(phase === "closed" || phase === "opening") && (
         <m.div
-          className="fixed inset-0 z-overlay flex flex-col items-center justify-center bg-surface px-gutter"
+          // Tighter gutter than the rest of the site: the envelope is meant to
+          // reach close to the screen edges, like a card held in both hands.
+          className="fixed inset-0 z-overlay flex flex-col items-center justify-center bg-surface px-md"
           initial={{ opacity: 1 }}
           animate={isOpening ? { opacity: 0, y: "-6%" } : { opacity: 1, y: 0 }}
           transition={{
@@ -180,7 +199,7 @@ export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
             <m.span
               aria-hidden="true"
               className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
-              style={{ top: `${(FLAP_Y / H) * 100}%` }}
+              style={{ top: `${(FLAP_Y / H) * 100}%`, width: SEAL_WIDTH }}
               animate={{
                 opacity: isOpening ? 0 : 1,
                 scale: isOpening ? 0.86 : 1,
@@ -191,13 +210,17 @@ export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
                 <Image
                   src={invitation.options.sealImage}
                   alt=""
-                  width={SEAL_SIZE}
-                  height={SEAL_SIZE}
+                  width={448}
+                  height={442}
                   priority
                   // Decorative: the button's aria-label carries the meaning.
                   aria-hidden="true"
-                  className="h-auto w-full"
-                  style={{ width: SEAL_SIZE, height: "auto" }}
+                  sizes="(max-width: 640px) 30vw, 150px"
+                  className="h-auto w-full select-none"
+                  // A whisper of shadow so the wax sits on the paper.
+                  style={{
+                    filter: "drop-shadow(0 3px 6px rgb(112 98 74 / 0.28))",
+                  }}
                 />
               ) : (
                 <WaxSeal size={SEAL_SIZE} />
