@@ -1,9 +1,14 @@
 "use client";
 
 import { AnimatePresence, m } from "framer-motion";
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
+import { invitation } from "@/data/invitation";
 import WaxSeal from "./WaxSeal";
 import { EASE_GENTLE } from "./motion/Reveal";
+
+/** Rendered size of the seal, in px. */
+const SEAL_SIZE = 92;
 
 const STORAGE_KEY = "baptism-envelope-opened";
 
@@ -182,7 +187,21 @@ export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
               }}
               transition={{ duration: 0.42, ease: EASE_GENTLE }}
             >
-              <WaxSeal size={84} />
+              {invitation.options.sealImage ? (
+                <Image
+                  src={invitation.options.sealImage}
+                  alt=""
+                  width={SEAL_SIZE}
+                  height={SEAL_SIZE}
+                  priority
+                  // Decorative: the button's aria-label carries the meaning.
+                  aria-hidden="true"
+                  className="h-auto w-full"
+                  style={{ width: SEAL_SIZE, height: "auto" }}
+                />
+              ) : (
+                <WaxSeal size={SEAL_SIZE} />
+              )}
             </m.span>
           </m.button>
 

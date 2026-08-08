@@ -16,7 +16,7 @@
  * Rename afterwards if you want a different order.
  */
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readdirSync, statSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, statSync } from "node:fs";
 import { extname, join, resolve } from "node:path";
 
 const MAX_EDGE = 1600;
@@ -81,28 +81,60 @@ originals.forEach((original, index) => {
   const before = statSync(from).size;
   totalBefore += before;
 
+  /*
+   * Read the real dimensions first. Never upscale: `sips -Z` enlarges an image
+   * that is already smaller than the target, which inflates the file and
+   * softens detail for no benefit. Photos exported from a phone gallery or a
+   * messaging app are often already ~1080px and well compressed.
+   */
+  const info = execFileSync("sips", ["-g", "pixelWidth", "-g", "pixelHeight", from], {
+    encoding: "utf8",
+  });
+  const width = Number(/pixelWidth:\s*(\d+)/.exec(info)?.[1] ?? 0);
+  const height = Number(/pixelHeight:\s*(\d+)/.exec(info)?.[1] ?? 0);
+  const longEdge = Math.max(width, height);
+  const needsResize = longEdge > MAX_EDGE;
+
   if (dryRun) {
     console.log(
-      `  ${original}  →  photos/${slot}.jpg   (${(before / 1e6).toFixed(1)}MB)`
+      `  ${original.padEnd(26)} → photos/${slot}.jpg   ` +
+        `${width}×${height}  ${(before / 1e6).toFixed(2)}MB` +
+        `${needsResize ? `  → resize to ${MAX_EDGE}px` : "  (already small enough)"}`
     );
     return;
   }
 
-  execFileSync("sips", [
-    "-Z", String(MAX_EDGE),            // fit within MAX_EDGE, preserving aspect
-    "-s", "format", "jpeg",
-    "-s", "formatOptions", String(QUALITY),
-    from,
-    "--out", to,
-  ], { stdio: "ignore" });
+  const args = [];
+  if (needsResize) args.push("-Z", String(MAX_EDGE));
+  args.push("-s", "format", "jpeg", "-s", "formatOptions", String(QUALITY));
+  args.push(from, "--out", to);
 
-  const after = statSync(to).size;
+  execFileSync("sips", args, { stdio: "ignore" });
+
+  let after = statSync(to).size;
+
+  /*
+   * Re-encoding an already-compressed JPEG can still grow it. If it did, keep
+   * the original bytes — they are smaller and at least as sharp.
+   */
+  if (after > before && !needsResize) {
+    copyFileSync(from, to);
+    after = statSync(to).size;
+    console.log(
+      `  ✓ ${original.padEnd(26)} → photos/${slot}.jpg   ` +
+        `${width}×${height}  ${(before / 1e6).toFixed(2)}MB  (kept original — already optimal)`
+    );
+    totalAfter += after;
+    return;
+  }
+
   totalAfter += after;
 
-  const saved = before > 0 ? Math.round((1 - after / before) * 100) : 0;
+  const delta = Math.round((1 - after / before) * 100);
   console.log(
-    `  ✓ ${original.padEnd(28)} → photos/${slot}.jpg   ` +
-      `${(before / 1e6).toFixed(1)}MB → ${(after / 1e6).toFixed(2)}MB  (−${saved}%)`
+    `  ✓ ${original.padEnd(26)} → photos/${slot}.jpg   ` +
+      `${width}×${height}  ${(before / 1e6).toFixed(2)}MB → ${(after / 1e6).toFixed(2)}MB` +
+      `  (${delta >= 0 ? "−" : "+"}${Math.abs(delta)}%)`
   );
 });
 

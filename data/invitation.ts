@@ -69,6 +69,12 @@ export type Invitation = {
      * `?skipEnvelope` to any link to bypass it.
      */
     envelope: boolean;
+    /**
+     * Path to a wax-seal image, e.g. "/seal.png". Needs a transparent
+     * background — anything opaque will show as a rectangle on the envelope.
+     * Leave undefined to use the built-in drawn seal instead.
+     */
+    sealImage?: string;
     /** Show the countdown in the details section */
     countdown: boolean;
     /** Show the "Sacred music" toggle. Requires audioSrc. */
@@ -79,13 +85,13 @@ export type Invitation = {
 
 export const invitation: Invitation = {
   child: {
-    name: "[DAUGHTER'S NAME]",
-    baptismName: undefined, // e.g. "Walatta Maryam" — optional
-    shortName: "[NAME]",
+    name: "Amaldan",
+    baptismName: undefined, // Christian name given at baptism — optional
+    shortName: "Amaldan",
   },
 
   parents: {
-    names: "[MOTHER'S NAME] & [FATHER'S NAME]",
+    names: "[MOTHER'S NAME] & Filmon",
     signature: "Mommy & Daddy",
   },
 
@@ -132,63 +138,52 @@ export const invitation: Invitation = {
    */
   geez: null,
 
+  /*
+   * `position` is CSS object-position. These photographs are square, so on a
+   * tall phone screen a good deal is cropped from top and bottom — each value
+   * is set to keep Amaldan's face in frame.
+   */
   heroPhoto: {
     src: "/photos/hero.jpg",
-    alt: "[DAUGHTER'S NAME] resting peacefully, wrapped in a white shawl",
-    position: "50% 40%",
+    alt: "Amaldan smiling wide, wrapped in a soft pink blanket with her hands tucked under her chin",
+    position: "50% 30%",
     caption: "Our little blessing.",
   },
 
   gallery: [
     {
       src: "/photos/01.jpg",
-      alt: "[DAUGHTER'S NAME] asleep with one hand curled beneath her cheek",
-      position: "50% 35%",
+      alt: "Amaldan lying beside a small teddy bear, looking directly at the camera",
+      position: "68% 42%",
     },
     {
       src: "/photos/02.jpg",
-      alt: "[DAUGHTER'S NAME] lying on a cream blanket in soft morning light",
-      position: "50% 50%",
+      alt: "A close portrait of Amaldan resting on a blanket, wide awake",
+      position: "40% 60%",
       caption: "Wonderfully made.",
     },
     {
       src: "/photos/03.jpg",
-      alt: "Close portrait of [DAUGHTER'S NAME] with her eyes open",
-      position: "50% 30%",
+      alt: "Amaldan in a pink dress and flower headband, holding a red balloon at two months old",
+      position: "50% 32%",
     },
     {
       src: "/photos/04.jpg",
-      alt: "[DAUGHTER'S NAME] held in her mother's arms",
-      position: "50% 40%",
-      caption: "Surrounded by love.",
-    },
-    {
-      src: "/photos/05.jpg",
-      alt: "[DAUGHTER'S NAME]'s hand resting in her father's palm",
-      position: "50% 50%",
-    },
-    {
-      src: "/photos/06.jpg",
-      alt: "[DAUGHTER'S NAME] dressed in white, looking toward the window",
-      position: "50% 35%",
-    },
-    {
-      src: "/photos/07.jpg",
-      alt: "[DAUGHTER'S NAME] smiling while being held upright",
-      position: "50% 30%",
+      alt: "Amaldan looking upward with a gentle smile, red balloons beside her",
+      position: "50% 42%",
       caption: "Growing in grace.",
     },
     {
-      src: "/photos/08.jpg",
-      alt: "[DAUGHTER'S NAME] with her family gathered around her",
-      position: "50% 45%",
+      src: "/photos/05.jpg",
+      alt: "Amaldan laughing in a yellow and black striped outfit, surrounded by flowers",
+      position: "50% 26%",
     },
   ],
 
   closingPhoto: {
     src: "/photos/closing.jpg",
-    alt: "[DAUGHTER'S NAME] sleeping peacefully in soft light",
-    position: "50% 40%",
+    alt: "Amaldan asleep in a white hooded outfit on a soft pink blanket",
+    position: "50% 45%",
   },
 
   // Optional second gallery. Leave as [] to hide the section entirely.
@@ -196,6 +191,9 @@ export const invitation: Invitation = {
 
   options: {
     envelope: true,
+    // Save the seal artwork to public/seal.png (transparent background) and
+    // set this to "/seal.png" to use it in place of the drawn seal.
+    sealImage: undefined,
     countdown: false, // off by default — keeps the tone intimate rather than event-like
     music: false,
     audioSrc: undefined,
