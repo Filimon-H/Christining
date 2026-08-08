@@ -1,0 +1,288 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════
+   RUNTIME TOKENS
+   Mirrors of the Tailwind theme, exposed as custom
+   properties for the few places CSS needs them
+   directly (SVG fills, gradients, keyframes).
+   Tailwind config is the source of truth.
+   ═══════════════════════════════════════════════ */
+:root {
+  --surface: #faf7f0;
+  --surface-alt: #f8f4eb;
+
+  --ink: #27231f;
+  --ink-muted: #635b50;
+  --ink-subtle: #776e61;
+
+  --accent: #b59a5b;
+  --accent-strong: #816937;
+  --accent-soft: #c1a663;
+
+  --line: #d8ccb6;
+  --line-soft: #e7decc;
+
+  /* Motion */
+  --ease-gentle: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-ui: 200ms;
+  --duration-fade: 500ms;
+  --duration-section: 900ms;
+  --duration-slide: 1000ms;
+  --duration-kenburns: 6000ms;
+
+  /* iPhone safe areas */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Scene gutter — fluid, shared by every full-width section */
+  --gutter: clamp(1.375rem, 7vw, 4rem);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface font-body text-ink antialiased;
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Ethiopic falls back through the display serif when unavailable. */
+  :lang(am) {
+    @apply font-ethiopic;
+  }
+
+  /* Focus ring: gold, offset, never removed. */
+  :focus-visible {
+    outline: 1.5px solid var(--accent-strong);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Balanced ragging for short centred blocks. */
+  h1,
+  h2,
+  blockquote p {
+    text-wrap: balance;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   TYPOGRAPHY COMPONENTS
+   One class per role. Size, leading and tracking
+   all come from the fontSize token, so callers
+   never re-declare them.
+   ═══════════════════════════════════════════════ */
+@layer components {
+  .t-eyebrow {
+    @apply font-body text-eyebrow font-normal uppercase text-accent-strong;
+  }
+
+  .t-whisper {
+    @apply font-body text-whisper uppercase text-ink-subtle;
+  }
+
+  /* Sentence-case variant of whisper, for "With love," */
+  .t-whisper-plain {
+    @apply font-body text-whisper normal-case tracking-wide text-ink-subtle;
+  }
+
+  .t-label {
+    @apply font-body text-label uppercase text-accent-strong;
+  }
+
+  .t-body {
+    @apply font-display text-body font-light text-ink;
+  }
+
+  .t-value {
+    @apply font-display text-value font-light text-ink;
+  }
+
+  /* Address lines and other subordinate detail. */
+  .t-value-sub {
+    @apply font-display text-label normal-case tracking-normal text-ink-muted;
+    font-size: 0.86em;
+    letter-spacing: 0;
+  }
+
+  .t-numeral {
+    @apply font-display text-numeral font-light tabular-nums text-ink;
+  }
+
+  .t-verse {
+    @apply font-display text-verse font-light italic text-ink;
+  }
+
+  .t-scripture {
+    @apply font-display text-scripture font-light italic text-ink;
+  }
+
+  /*
+   * The name is the one string whose length we don't control, so both variants
+   * get belt and braces: `balance` splits it evenly across lines, `break-word`
+   * is the last resort for a single unbreakable token, and max-width keeps it
+   * inside the gutter either way.
+   */
+  .t-name,
+  .t-name-long {
+    @apply font-display font-light italic text-ink;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+  }
+
+  .t-name {
+    @apply text-name;
+  }
+
+  .t-name-long {
+    @apply text-name-long;
+  }
+
+  /* ── Structure ──────────────────────────────── */
+
+  /**
+   * Full-height scene. `min-h-svh` (not `h-svh`) so a tall invitation grows
+   * and scrolls rather than clipping its closing lines on a short viewport.
+   * svh avoids the iOS Safari toolbar jump that plagues vh.
+   */
+  .scene {
+    @apply relative flex min-h-svh flex-col items-center justify-center;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+
+  /* Section that sizes to its content rather than the viewport. */
+  .band {
+    @apply relative flex w-full flex-col items-center;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+
+  /* Hairline gold rule, fading at both ends. */
+  .rule {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--line) 22%,
+      var(--accent) 50%,
+      var(--line) 78%,
+      transparent
+    );
+  }
+
+  /* 44×44 minimum target per WCAG 2.5.8. */
+  .tap {
+    @apply inline-flex min-h-tap min-w-tap items-center justify-center;
+  }
+
+  /* ── Buttons ────────────────────────────────
+     variant × size, consistent across the site.
+     ─────────────────────────────────────────── */
+  .btn {
+    @apply tap rounded-full transition-colors duration-ui ease-gentle;
+  }
+
+  .btn-outline {
+    @apply btn border border-accent/45 px-xl py-sm text-ink;
+  }
+
+  .btn-outline:hover {
+    @apply border-accent bg-accent/5;
+  }
+
+  .btn-quiet {
+    @apply btn px-lg py-xs text-ink-subtle;
+  }
+
+  .btn-quiet:hover {
+    @apply text-accent-strong;
+  }
+
+  /* Icon-only control, e.g. gallery prev/next. */
+  .btn-icon {
+    @apply btn rounded-full text-ink-subtle;
+  }
+
+  .btn-icon:hover {
+    @apply text-accent-strong;
+  }
+
+  /* ── Effects ────────────────────────────────── */
+  .ken-burns {
+    animation: kenburns var(--duration-kenburns) var(--ease-gentle) forwards;
+  }
+
+  /* Cream scrim so captions stay legible over bright photographs. */
+  .scrim-bottom {
+    background: linear-gradient(
+      to top,
+      rgb(250 247 240 / 0.9),
+      rgb(250 247 240 / 0)
+    );
+  }
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.025);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   PAPER TEXTURE
+   ~2% inline SVG grain. No extra request.
+   ═══════════════════════════════════════════════ */
+.paper-grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* ═══════════════════════════════════════════════
+   REDUCED MOTION
+   Fades only: no zoom, no travel, no autoplay.
+   ═══════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* A plain opacity crossfade stays — it conveys change without motion. */
+  .allow-fade {
+    transition: opacity 300ms linear !important;
+  }
+
+  .ken-burns {
+    animation: none !important;
+    transform: none !important;
+  }
+}
