@@ -47,7 +47,7 @@ export default function ScriptureSection() {
           delay={afterLines + 0.2}
           className="mt-2xl w-full max-w-rule-sm"
         >
-          <div className="rule" />
+          <div className="rule-ornate" />
         </Reveal>
 
         <Reveal as="figcaption" delay={afterLines + 0.35} className="mt-lg">

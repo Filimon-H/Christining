@@ -218,7 +218,13 @@ export default function PhotoGallery() {
             aria-hidden="true"
             className="scrim-bottom absolute inset-x-0 bottom-0 h-5xl"
           />
-          <p key={current.src} className="allow-fade t-body relative italic">
+          {/* Keyed on src so it re-mounts per slide, giving each caption its
+              own small rise as it arrives — secondary motion supporting the
+              crossfade rather than competing with it. */}
+          <p
+            key={current.src}
+            className="caption-rise allow-fade t-body relative italic"
+          >
             {current.caption}
           </p>
         </div>
@@ -246,10 +252,12 @@ export default function PhotoGallery() {
           {gallery.map((photo, index) => (
             <li
               key={photo.src}
+              // The active dot elongates into a small bar as well as changing
+              // colour, so position is legible at a glance.
               className={
                 index === activeIndex
-                  ? "size-dot rounded-full bg-accent transition-colors duration-fade ease-gentle"
-                  : "size-dot rounded-full bg-line transition-colors duration-fade ease-gentle"
+                  ? "h-dot w-3 rounded-full bg-accent transition-all duration-fade ease-gentle"
+                  : "size-dot rounded-full bg-line transition-all duration-fade ease-gentle"
               }
             />
           ))}

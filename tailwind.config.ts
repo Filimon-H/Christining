@@ -212,6 +212,13 @@ export default {
       size: {
         dot: "0.3125rem",
       },
+      height: {
+        dot: "0.3125rem",
+      },
+      width: {
+        /** The active gallery dot, elongated */
+        3: "0.875rem",
+      },
 
       /**
        * minWidth/minHeight do not inherit from a *replaced* spacing scale, so

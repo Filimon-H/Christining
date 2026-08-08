@@ -44,7 +44,9 @@ export default function ClosingSection() {
         }}
       >
         <Reveal y={0} duration={1.1}>
-          <OrthodoxCross size={32} />
+          <span className="cross-halo inline-block">
+            <OrthodoxCross size={34} />
+          </span>
         </Reveal>
 
         <Reveal delay={0.2} className="mt-2xl">
@@ -58,7 +60,7 @@ export default function ClosingSection() {
         </Reveal>
 
         <Reveal y={0} delay={0.4} className="mt-3xl w-full max-w-rule-sm">
-          <div className="rule" />
+          <div className="rule-ornate" />
         </Reveal>
 
         <Reveal delay={0.5} className="mt-xl">

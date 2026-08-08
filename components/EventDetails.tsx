@@ -43,9 +43,18 @@ export default function EventDetails() {
         paddingBottom: "calc(var(--safe-bottom) + 4.5rem)",
       }}
     >
-      <div className="flex w-full max-w-invitation flex-col items-center text-center">
+      <div className="card-mount flex w-full max-w-invitation flex-col items-center px-lg py-2xl text-center">
+        <span aria-hidden="true" className="corner-marks">
+          <span />
+          <span />
+          <span />
+          <span />
+        </span>
+
         <Reveal y={0} duration={1.1}>
-          <OrthodoxCross size={30} />
+          <span className="cross-halo inline-block">
+            <OrthodoxCross size={32} />
+          </span>
         </Reveal>
 
         <Reveal delay={0.15} className="mt-xl">
@@ -55,7 +64,7 @@ export default function EventDetails() {
         </Reveal>
 
         <Reveal y={0} delay={0.25} className="mt-xl w-full max-w-rule-md">
-          <div className="rule" />
+          <div className="rule-ornate" />
         </Reveal>
 
         <dl className="mt-3xl flex flex-col items-center gap-4xl">

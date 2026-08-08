@@ -41,7 +41,15 @@ export default function InvitationHero() {
        * inside, which is what the printed reference has and a bare centred
        * column does not.
        */}
-      <div className="card-mount corner-marks flex w-full max-w-invitation flex-col items-center px-lg py-2xl text-center">
+      <div className="card-mount flex w-full max-w-invitation flex-col items-center px-lg py-2xl text-center">
+        {/* Four gold corner brackets. Decorative. */}
+        <span aria-hidden="true" className="corner-marks">
+          <span />
+          <span />
+          <span />
+          <span />
+        </span>
+
         <Reveal trigger="mount" duration={1.1} y={0}>
           <span className="cross-halo inline-block">
             <OrthodoxCross size={40} />

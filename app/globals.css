@@ -224,6 +224,11 @@
     animation: kenburns var(--duration-kenburns) var(--ease-gentle) forwards;
   }
 
+  /* Caption arrives with a small rise, supporting the photo crossfade. */
+  .caption-rise {
+    animation: caption-rise 1s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
   /* Cream scrim so captions stay legible over bright photographs. */
   .scrim-bottom {
     background: linear-gradient(
@@ -344,30 +349,64 @@
       0 18px 50px -32px rgb(112 98 74 / 0.28);
   }
 
-  /* Gold corner brackets, drawn with borders on pseudo-elements. */
-  .corner-marks::before,
-  .corner-marks::after {
-    content: "";
+  /*
+   * Gold corner brackets on all four corners.
+   *
+   * A pseudo-element gives only two, so the marks live on a dedicated child
+   * with ::before and ::after each drawing a full box — one contributing the
+   * top pair, the other the bottom pair, via opposing inset borders.
+   */
+  .corner-marks {
     position: absolute;
-    width: 15px;
-    height: 15px;
-    border-color: var(--accent);
-    opacity: 0.5;
+    inset: 9px;
     pointer-events: none;
   }
 
-  .corner-marks::before {
-    top: 10px;
-    left: 10px;
+  .corner-marks span {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--accent);
+    opacity: 0.55;
+  }
+
+  .corner-marks span:nth-child(1) {
+    top: 0;
+    left: 0;
     border-top: 1px solid;
     border-left: 1px solid;
   }
 
-  .corner-marks::after {
-    right: 10px;
-    bottom: 10px;
+  .corner-marks span:nth-child(2) {
+    top: 0;
+    right: 0;
+    border-top: 1px solid;
     border-right: 1px solid;
+  }
+
+  .corner-marks span:nth-child(3) {
+    bottom: 0;
+    left: 0;
     border-bottom: 1px solid;
+    border-left: 1px solid;
+  }
+
+  .corner-marks span:nth-child(4) {
+    bottom: 0;
+    right: 0;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+  }
+}
+
+@keyframes caption-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -451,6 +490,16 @@
      without any drift. */
   .ambient-wash {
     animation: none !important;
+    transform: none !important;
+  }
+
+  /*
+   * Cancel the rise but force the end state. The animation is `both`-filled,
+   * so merely disabling it would leave the caption pinned at opacity 0.
+   */
+  .caption-rise {
+    animation: none !important;
+    opacity: 1 !important;
     transform: none !important;
   }
 }
