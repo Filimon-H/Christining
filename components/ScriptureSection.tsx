@@ -29,11 +29,16 @@ export default function ScriptureSection() {
     >
       {/*
        * The same mount and corner brackets as the invitation, so the two
-       * typographic scenes read as facing pages of one card. Generous vertical
-       * padding: a short verse in a tight frame looks cramped, where the
-       * invitation fills its own frame with copy.
+       * typographic scenes read as facing pages of one card.
+       *
+       * `flex-1` with a min-height rather than fixed padding: the verse is only
+       * four lines, so padding alone left the card at 411px inside an 844px
+       * scene — 217px of bare cream above and below it, which read as the frame
+       * having shrunk away from the page. Letting the card grow to fill the
+       * scene matches how the invitation and details cards sit in theirs, and
+       * the content stays optically centred because the figure centres it.
        */}
-      <figure className="card-mount flex w-full max-w-prose flex-col items-center px-lg py-4xl text-center">
+      <figure className="card-mount flex w-full max-w-prose flex-1 flex-col items-center justify-center px-lg py-2xl text-center">
         <span aria-hidden="true" className="corner-marks">
           <span />
           <span />
