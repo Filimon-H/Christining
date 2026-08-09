@@ -77,7 +77,14 @@ type Phase = "closed" | "opening" | "gone";
  * The whole envelope is one SVG with a single viewBox rather than stacked
  * stretched layers, so every edge stays true at any width.
  */
-export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
+export default function EnvelopeGate({
+  enabled,
+  onOpen,
+}: {
+  enabled: boolean;
+  /** Fired on the opening tap — the gesture that lets audio start. */
+  onOpen?: () => void;
+}) {
   /**
    * `null` means "not yet decided": until storage is read we render nothing,
    * rather than flashing an envelope at a returning guest.
@@ -131,7 +138,14 @@ export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
   }, [phase]);
 
   const open = useCallback(() => {
-    setPhase((current) => (current === "closed" ? "opening" : current));
+    setPhase((current) => {
+      // Only signal on the real transition, not on a repeat tap mid-animation.
+      if (current === "closed") {
+        onOpen?.();
+        return "opening";
+      }
+      return current;
+    });
 
     try {
       sessionStorage.setItem(STORAGE_KEY, "1");
@@ -140,7 +154,7 @@ export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
     }
 
     window.setTimeout(() => setPhase("gone"), liftDelayMs + liftMs);
-  }, [liftDelayMs, liftMs]);
+  }, [liftDelayMs, liftMs, onOpen]);
 
   const isOpening = phase === "opening";
 

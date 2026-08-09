@@ -1,8 +1,7 @@
 import dynamic from "next/dynamic";
-import { invitation } from "@/data/invitation";
 import MotionProvider from "@/components/motion/MotionProvider";
 import Ambience from "@/components/Ambience";
-import EnvelopeGate from "@/components/EnvelopeGate";
+import Experience from "@/components/Experience";
 import InvitationHero from "@/components/InvitationHero";
 import ScriptureSection from "@/components/ScriptureSection";
 import HeroPortrait from "@/components/HeroPortrait";
@@ -22,7 +21,9 @@ export default function Page() {
     <MotionProvider>
       {/* Ambient layer sits behind every scene. */}
       <Ambience />
-      <EnvelopeGate enabled={invitation.options.envelope} />
+      {/* The envelope and the sound control share one piece of state: whether
+          the envelope has been opened. */}
+      <Experience />
       <SceneIndicator />
 
       <main>

@@ -105,9 +105,18 @@ export type Invitation = {
     envelopeAspect?: number;
     /** Show the countdown in the details section */
     countdown: boolean;
-    /** Show the "Sacred music" toggle. Requires audioSrc. */
+    /**
+     * Play `audioSrc` when the guest opens the envelope, with a mute control.
+     *
+     * Sound never starts on its own — the tap that opens the envelope is the
+     * gesture that permits it, and the choice to mute is remembered.
+     */
     music: boolean;
     audioSrc?: string;
+    /** Peak volume, 0–1. Deliberately low: the invitation is the subject. */
+    audioVolume?: number;
+    /** Loop the audio. Leave false for a one-off recording. */
+    audioLoop?: boolean;
   };
 };
 
@@ -269,8 +278,11 @@ export const invitation: Invitation = {
     envelopeImage: "/photos/envelope.jpg",
     envelopeAspect: 1800 / 1243,
     countdown: false, // off by default — keeps the tone intimate rather than event-like
-    music: false,
-    audioSrc: undefined,
+    music: true,
+    audioSrc: "/audio/blessing.m4a",
+    audioVolume: 0.35,
+    // A 50s recording rather than a music bed, so it plays once and stops.
+    audioLoop: false,
   },
 };
 

@@ -30,7 +30,9 @@
   --duration-fade: 500ms;
   --duration-section: 900ms;
   --duration-slide: 1000ms;
-  --duration-kenburns: 6000ms;
+  /* Matches the gallery's 3s dwell plus its 700ms crossfade, so the drift
+     completes as the slide hands over rather than being cut off mid-move. */
+  --duration-kenburns: 3700ms;
 
   /* iPhone safe areas */
   --safe-top: env(safe-area-inset-top, 0px);
@@ -296,7 +298,7 @@
 
   /* Caption arrives with a small rise, supporting the photo crossfade. */
   .caption-rise {
-    animation: caption-rise 1s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation: caption-rise 620ms cubic-bezier(0.4, 0, 0.2, 1) both;
   }
 
   /* Cream scrim so captions stay legible over bright photographs. */
@@ -527,12 +529,19 @@
   }
 }
 
+/*
+ * Ken Burns drift.
+ *
+ * 1.6%, not the 2.5% used when slides held for six seconds: the same travel
+ * compressed into 3.7s reads as a visible push rather than a drift. Keeping the
+ * rate of change roughly constant is what preserves the calm.
+ */
 @keyframes kenburns {
   from {
     transform: scale(1);
   }
   to {
-    transform: scale(1.025);
+    transform: scale(1.016);
   }
 }
 

@@ -201,11 +201,11 @@ export default {
       keyframes: {
         kenburns: {
           from: { transform: "scale(1)" },
-          to: { transform: "scale(1.025)" },
+          to: { transform: "scale(1.016)" },
         },
       },
       animation: {
-        kenburns: "kenburns 6000ms cubic-bezier(0.22, 1, 0.36, 1) forwards",
+        kenburns: "kenburns 3700ms cubic-bezier(0.22, 1, 0.36, 1) forwards",
       },
 
       /** Fixed sizes for small fixed-dimension UI. */
