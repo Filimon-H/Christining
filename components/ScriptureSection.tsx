@@ -27,7 +27,20 @@ export default function ScriptureSection() {
         paddingBottom: "calc(var(--safe-bottom) + 3rem)",
       }}
     >
-      <figure className="flex w-full max-w-prose flex-col items-center text-center">
+      {/*
+       * The same mount and corner brackets as the invitation, so the two
+       * typographic scenes read as facing pages of one card. Generous vertical
+       * padding: a short verse in a tight frame looks cramped, where the
+       * invitation fills its own frame with copy.
+       */}
+      <figure className="card-mount flex w-full max-w-prose flex-col items-center px-lg py-4xl text-center">
+        <span aria-hidden="true" className="corner-marks">
+          <span />
+          <span />
+          <span />
+          <span />
+        </span>
+
         <blockquote className="flex flex-col items-center">
           {scripture.lines.map((line, index) => (
             <Reveal
