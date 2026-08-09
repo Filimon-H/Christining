@@ -8,9 +8,13 @@ type Props = {
   src: string;
   /** Rises to this level. Kept low — the invitation is the subject, not the sound. */
   volume?: number;
-  /** Set true once the guest has opened the envelope, which is the gesture
-   *  that permits playback. */
-  armed: boolean;
+  /** Show the control. True whenever the invitation is on screen. */
+  visible: boolean;
+  /**
+   * Begin playing without being asked. Only ever true for the tap that opened
+   * the envelope — the one gesture a browser accepts as permission.
+   */
+  autoplay: boolean;
   /** Loop, for continuous music. Leave false for a one-off recording. */
   loop?: boolean;
 };
@@ -35,7 +39,8 @@ const STORAGE_KEY = "baptism-sound-muted";
 export default function SoundToggle({
   src,
   volume = 0.4,
-  armed,
+  visible,
+  autoplay,
   loop = false,
 }: Props) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -89,7 +94,7 @@ export default function SoundToggle({
 
   /* Start once the envelope has been opened, unless muted. */
   useEffect(() => {
-    if (!armed || muted === null || muted) return;
+    if (!autoplay || muted === null || muted) return;
 
     const audio = audioRef.current;
     if (!audio) return;
@@ -103,7 +108,7 @@ export default function SoundToggle({
         /* blocked — the guest can start it with the button */
       }
     );
-  }, [armed, muted, volume, fadeTo]);
+  }, [autoplay, muted, volume, fadeTo]);
 
   /* Pause in the background; resume only if the guest hadn't muted. */
   useEffect(() => {
@@ -114,7 +119,7 @@ export default function SoundToggle({
       if (document.hidden) {
         clearFade();
         audio.pause();
-      } else if (armed && muted === false) {
+      } else if (autoplay && muted === false) {
         audio.volume = 0;
         audio.play().then(() => fadeTo(volume), () => {});
       }
@@ -122,7 +127,7 @@ export default function SoundToggle({
 
     document.addEventListener("visibilitychange", onVisibility);
     return () => document.removeEventListener("visibilitychange", onVisibility);
-  }, [armed, muted, volume, fadeTo, clearFade]);
+  }, [autoplay, muted, volume, fadeTo, clearFade]);
 
   useEffect(() => clearFade, [clearFade]);
 
@@ -150,34 +155,50 @@ export default function SoundToggle({
     });
   }, [fadeTo, volume]);
 
-  // Nothing to control until the envelope is open.
-  if (!armed) return null;
-
   const isMuted = muted !== false;
 
   return (
     <>
+      {/*
+       * The audio element is always mounted, never gated on `visible`.
+       *
+       * Autoplay is requested the moment the envelope is tapped, but the
+       * control only appears once the cover has lifted — roughly 2.5s later.
+       * Mounting the element with the button meant the play() call had no
+       * element to act on and the sound silently never started.
+       */}
       {/* eslint-disable-next-line jsx-a11y/media-has-caption -- instrumental,
           no spoken content to caption. */}
       <audio ref={audioRef} src={src} loop={loop} preload="none" />
 
-      <button
-        type="button"
-        onClick={toggle}
-        aria-pressed={!isMuted}
-        aria-label={isMuted ? "Play sacred music" : "Mute sacred music"}
-        className="btn-icon fixed bottom-0 right-0 z-controls m-md text-ink-subtle"
-        style={{
-          marginBottom: "calc(var(--safe-bottom) + 1rem)",
-          marginRight: "calc(env(safe-area-inset-right, 0px) + 1rem)",
-        }}
-      >
-        {isMuted ? (
-          <VolumeX size={16} strokeWidth={1.5} aria-hidden="true" />
-        ) : (
-          <Volume2 size={16} strokeWidth={1.5} aria-hidden="true" />
-        )}
-      </button>
+      {/*
+       * Pinned bottom-left, clear of the gallery's controls, which occupy the
+       * bottom centre and right.
+       *
+       * It needs its own surface: a bare icon at this size disappears over a
+       * photograph, and this control sits above full-bleed images for most of
+       * the page. A cream disc with a hairline gold edge keeps it legible on
+       * both cream and photo backgrounds without shouting.
+       */}
+      {visible && (
+        <button
+          type="button"
+          onClick={toggle}
+          aria-pressed={!isMuted}
+          aria-label={isMuted ? "Play sacred music" : "Mute sacred music"}
+          className="tap fixed bottom-0 left-0 z-controls rounded-full border border-accent/40 bg-surface/85 text-accent-strong shadow-sm backdrop-blur-sm transition-colors duration-ui ease-gentle hover:border-accent hover:bg-surface"
+          style={{
+            marginBottom: "calc(var(--safe-bottom) + 1rem)",
+            marginLeft: "calc(env(safe-area-inset-left, 0px) + 1rem)",
+          }}
+        >
+          {isMuted ? (
+            <VolumeX size={17} strokeWidth={1.5} aria-hidden="true" />
+          ) : (
+            <Volume2 size={17} strokeWidth={1.5} aria-hidden="true" />
+          )}
+        </button>
+      )}
     </>
   );
 }

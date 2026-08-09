@@ -80,10 +80,16 @@ type Phase = "closed" | "opening" | "gone";
 export default function EnvelopeGate({
   enabled,
   onOpen,
+  onRevealed,
 }: {
   enabled: boolean;
   /** Fired on the opening tap — the gesture that lets audio start. */
   onOpen?: () => void;
+  /**
+   * Fired whenever the cover is out of the way, including the return visit
+   * where it is skipped entirely and there was never a tap to hook.
+   */
+  onRevealed?: () => void;
 }) {
   /**
    * `null` means "not yet decided": until storage is read we render nothing,
@@ -127,6 +133,18 @@ export default function EnvelopeGate({
     setPhase(opened ? "gone" : "closed");
   }, [enabled]);
 
+  /*
+   * Announce that the cover is out of the way.
+   *
+   * In an effect rather than at the call sites that set "gone": there are four
+   * of them (disabled, ?skipEnvelope, already-opened, and the lift finishing),
+   * and one effect keyed on the resulting phase cannot miss a path or fire
+   * during render.
+   */
+  useEffect(() => {
+    if (phase === "gone") onRevealed?.();
+  }, [phase, onRevealed]);
+
   /* Lock scrolling while the envelope covers the page. */
   useEffect(() => {
     if (phase !== "closed" && phase !== "opening") return;
@@ -138,14 +156,18 @@ export default function EnvelopeGate({
   }, [phase]);
 
   const open = useCallback(() => {
-    setPhase((current) => {
-      // Only signal on the real transition, not on a repeat tap mid-animation.
-      if (current === "closed") {
-        onOpen?.();
-        return "opening";
-      }
-      return current;
-    });
+    /*
+     * Guard on the rendered `phase`, not inside a setPhase updater.
+     *
+     * A state updater must be pure — React may call it during render, so
+     * notifying a parent from inside one updates that parent mid-render and
+     * throws "Cannot update a component while rendering a different one".
+     * Reading `phase` here is safe because this only runs from a click.
+     */
+    if (phase !== "closed") return;
+
+    setPhase("opening");
+    onOpen?.();
 
     try {
       sessionStorage.setItem(STORAGE_KEY, "1");
@@ -154,7 +176,7 @@ export default function EnvelopeGate({
     }
 
     window.setTimeout(() => setPhase("gone"), liftDelayMs + liftMs);
-  }, [liftDelayMs, liftMs, onOpen]);
+  }, [phase, liftDelayMs, liftMs, onOpen]);
 
   const isOpening = phase === "opening";
 

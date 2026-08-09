@@ -15,25 +15,41 @@ import SoundToggle from "./SoundToggle";
  * component; only this wrapper is client-side.
  */
 export default function Experience() {
-  const [opened, setOpened] = useState(false);
+  /** True once the guest's tap has opened the envelope — permits autoplay. */
+  const [openedByTap, setOpenedByTap] = useState(false);
+  /** True whenever the cover is out of the way, however that happened. */
+  const [coverGone, setCoverGone] = useState(false);
 
-  const handleOpen = useCallback(() => setOpened(true), []);
+  const handleOpen = useCallback(() => setOpenedByTap(true), []);
+  const handleRevealed = useCallback(() => setCoverGone(true), []);
 
-  const { music, audioSrc, audioVolume, audioLoop, envelope } =
-    invitation.options;
+  const { music, audioSrc, audioVolume, audioLoop } = invitation.options;
 
   return (
     <>
-      <EnvelopeGate enabled={envelope} onOpen={handleOpen} />
+      <EnvelopeGate
+        enabled={invitation.options.envelope}
+        onOpen={handleOpen}
+        onRevealed={handleRevealed}
+      />
 
       {music && audioSrc && (
         <SoundToggle
           src={audioSrc}
           volume={audioVolume}
           loop={audioLoop}
-          // When the envelope is disabled there is no opening tap to hook, so
-          // the control appears straight away and waits to be pressed.
-          armed={opened || !envelope}
+          /*
+           * Two separate ideas, previously conflated into one flag:
+           *
+           * `visible` — show the control. True whenever the invitation is on
+           *   screen, including a return visit where the envelope is skipped.
+           *   Tying this to the tap meant returning guests never saw a button.
+           *
+           * `autoplay` — start playing unprompted. Only ever true for the tap
+           *   itself, which is the gesture a browser accepts.
+           */
+          visible={coverGone}
+          autoplay={openedByTap}
         />
       )}
     </>
