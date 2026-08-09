@@ -199,9 +199,14 @@ export default function EventDetails() {
         </dl>
 
         {options.countdown && (
-          <Reveal delay={0.8} className="mt-4xl">
-            <Countdown isoDate={event.isoDate} />
-          </Reveal>
+          <>
+            <Reveal y={0} delay={0.75} className="mt-4xl w-full max-w-rule-sm">
+              <div className="rule-ornate" />
+            </Reveal>
+            <Reveal delay={0.85} className="mt-xl">
+              <Countdown isoDate={event.isoDate} />
+            </Reveal>
+          </>
         )}
       </div>
     </section>

@@ -177,11 +177,8 @@ export const invitation: Invitation = {
      * from / set back from) carries a precision that no literal translation
      * of an English address would.
      */
-    nameAm: "በቤታችን",
-    addressLinesAm: [
-      "ከ አፍሪካ ማደያ ገባ ብሎ",
-      "አሰላ መናኃሪያ አካባቢ",
-    ],
+    nameAm: "ቤታችን",
+    addressLinesAm: ["አሰላ መናኃሪያ አካባቢ ከ አፍሪካ ማደያ ገባ ብሎ"],
   },
 
   // No separate reception — the baptism celebration is the gathering at home.
@@ -279,8 +276,13 @@ export const invitation: Invitation = {
 
   closingPhoto: {
     src: "/photos/closing.jpg",
-    alt: "Amaldan asleep, bundled in a soft blanket beside cream flowers",
-    position: "50% 42%",
+    alt: "Amaldan asleep in a white hooded outfit, one hand curled beside her cheek, on a soft pink blanket",
+    /*
+     * She lies in the right two-thirds of the frame with her head just above
+     * centre. Holding 62% horizontally keeps her face and hands in view once
+     * the square is cropped to a tall screen.
+     */
+    position: "62% 45%",
   },
 
   // Optional second gallery. Leave as [] to hide the section entirely.
@@ -296,7 +298,10 @@ export const invitation: Invitation = {
     // printed seal, `sealImage` above is unused while this is set.
     envelopeImage: "/photos/envelope.jpg",
     envelopeAspect: 1800 / 1243,
-    countdown: false, // off by default — keeps the tone intimate rather than event-like
+    // Days, hours and minutes until the baptism. Minute resolution only — no
+    // ticking seconds, which would read as a sales timer rather than an
+    // invitation. Becomes a thank-you line once the date has passed.
+    countdown: true,
     music: true,
     audioSrc: "/audio/blessing.m4a",
     audioVolume: 0.35,

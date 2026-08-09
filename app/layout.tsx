@@ -1,36 +1,61 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Inter, Noto_Serif_Ethiopic } from "next/font/google";
+import localFont from "next/font/local";
 import { invitation } from "@/data/invitation";
 import "./globals.css";
 
-/* Fonts are self-hosted and subset by next/font — no runtime request to Google. */
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  style: ["normal", "italic"],
+/*
+ * Fonts are served from our own origin, loaded with next/font/local.
+ *
+ * Not next/font/google: that fetches the woff2 files from fonts.gstatic.com at
+ * build time, which turns Google's availability into a hard build dependency.
+ * When their server was slow the entire page returned 500 — for a family
+ * invitation that has to build reliably, that trade is not worth it. The five
+ * files in public/fonts total ~150KB and are checked into the repo, so the
+ * build is now hermetic and no guest's browser touches a third party either.
+ *
+ * Subsets are the same latin ranges next/font/google was serving.
+ */
+const cormorant = localFont({
+  /*
+   * Cormorant Garamond is a variable font: one file per style covers the whole
+   * 300–700 range, so two files replace the four static weights.
+   *
+   * These are the *latin* subsets from Google's unicode-range split. My first
+   * attempt grabbed arbitrary blocks from that split — files covering Cyrillic
+   * and Vietnamese ranges — which loaded without error and then silently fell
+   * back to a system serif for ordinary English text. The lesson: a font that
+   * "loads" is not the same as a font that has the glyphs.
+   */
+  src: [
+    {
+      path: "../public/fonts/cormorant-latin.woff2",
+      weight: "300 700",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/cormorant-latin-italic.woff2",
+      weight: "300 700",
+      style: "italic",
+    },
+  ],
   display: "swap",
   variable: "--font-cormorant",
   preload: true,
+  fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400"],
+const inter = localFont({
+  src: [
+    {
+      path: "../public/fonts/inter-latin.woff2",
+      weight: "100 900",
+      style: "normal",
+    },
+  ],
   display: "swap",
   variable: "--font-inter",
   preload: true,
-});
-
-/* Ethiopic coverage for the optional Ge'ez line.
-   Not preloaded: the Ge'ez line is off by default, and even when enabled it
-   sits far down the invitation, so it can load lazily without being noticed.
-   next/font requires literal values here, so this cannot key off the config. */
-const ethiopic = Noto_Serif_Ethiopic({
-  subsets: ["ethiopic"],
-  weight: ["300", "400"],
-  display: "swap",
-  variable: "--font-ethiopic",
-  preload: false,
+  fallback: ["system-ui", "-apple-system", "sans-serif"],
 });
 
 /* The full name in the share preview — it is how relatives will recognise her
@@ -104,7 +129,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${inter.variable} ${ethiopic.variable}`}
+      className={`${cormorant.variable} ${inter.variable}`}
     >
       <body className="paper-grain bg-surface text-ink antialiased">
         {children}

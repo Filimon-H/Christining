@@ -92,7 +92,25 @@ export default {
       fontFamily: {
         display: ["var(--font-cormorant)", "Georgia", "serif"],
         body: ["var(--font-inter)", "system-ui", "sans-serif"],
-        ethiopic: ["var(--font-ethiopic)", "Georgia", "serif"],
+        /*
+         * Ethiopic (Ge'ez script) for the Amharic lines.
+         *
+         * System fonts only, deliberately. Fetching Noto Serif Ethiopic at
+         * build time made the entire page fail whenever Google's font server
+         * was slow — a hard third-party build dependency for a few lines of
+         * text. Every platform an Ethiopian guest is likely to use already
+         * ships a Ge'ez face, so the script renders correctly with no download:
+         * Kefa on iOS and macOS, Nyala on Windows, Noto Serif/Sans Ethiopic on
+         * Android and most Linux, Abyssinica SIL where it is installed.
+         */
+        ethiopic: [
+          "Kefa",
+          "Nyala",
+          "Noto Serif Ethiopic",
+          "Noto Sans Ethiopic",
+          "Abyssinica SIL",
+          "serif",
+        ],
       },
 
       /**
