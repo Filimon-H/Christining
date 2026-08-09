@@ -1,9 +1,10 @@
 "use client";
 
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { invitation } from "@/data/invitation";
+import EnvelopePhoto from "./EnvelopePhoto";
 import WaxSeal from "./WaxSeal";
 import { EASE_GENTLE } from "./motion/Reveal";
 
@@ -29,6 +30,24 @@ const STORAGE_KEY = "baptism-envelope-opened";
 const FLAP_MS = 900;
 const LIFT_DELAY_MS = 520;
 const LIFT_MS = 1000;
+
+/**
+ * The photographic envelope runs a longer sequence than the drawn one — the
+ * flap swings, then the card inside rises before anything lifts away — so the
+ * cover has to stay on screen until that has played out. Cutting to the page
+ * mid-swing is what makes an opening animation feel broken rather than quick.
+ */
+const PHOTO_LIFT_DELAY_MS = 1500;
+const PHOTO_LIFT_MS = 1100;
+
+/**
+ * The photographic flap turns more slowly than the drawn one swings.
+ *
+ * A sheet of card this size takes closer to a second and a half to fall open;
+ * at 900ms it reads as flicked rather than opened, which is the difference
+ * between a paper animation and a UI panel.
+ */
+const PHOTO_FLAP_MS = 1400;
 
 /**
  * Envelope proportions, in the SVG's own coordinate space.
@@ -64,6 +83,19 @@ export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
    * rather than flashing an envelope at a returning guest.
    */
   const [phase, setPhase] = useState<Phase | null>(null);
+  const reduced = useReducedMotion();
+
+  const photographic = invitation.options.envelopeImage;
+  const aspect = invitation.options.envelopeAspect ?? 1.448;
+
+  /* The photographic open takes longer to play; reduced motion skips the
+     choreography entirely and just crossfades. */
+  const liftDelayMs = reduced
+    ? 0
+    : photographic
+      ? PHOTO_LIFT_DELAY_MS
+      : LIFT_DELAY_MS;
+  const liftMs = reduced ? 420 : photographic ? PHOTO_LIFT_MS : LIFT_MS;
 
   useEffect(() => {
     if (!enabled) {
@@ -107,8 +139,8 @@ export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
       /* non-fatal */
     }
 
-    window.setTimeout(() => setPhase("gone"), LIFT_DELAY_MS + LIFT_MS);
-  }, []);
+    window.setTimeout(() => setPhase("gone"), liftDelayMs + liftMs);
+  }, [liftDelayMs, liftMs]);
 
   const isOpening = phase === "opening";
 
@@ -122,8 +154,8 @@ export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
           initial={{ opacity: 1 }}
           animate={isOpening ? { opacity: 0, y: "-6%" } : { opacity: 1, y: 0 }}
           transition={{
-            duration: LIFT_MS / 1000,
-            delay: isOpening ? LIFT_DELAY_MS / 1000 : 0,
+            duration: liftMs / 1000,
+            delay: isOpening ? liftDelayMs / 1000 : 0,
             ease: EASE_GENTLE,
           }}
           exit={{ opacity: 0 }}
@@ -139,6 +171,15 @@ export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
             whileTap={isOpening ? undefined : { scale: 0.985 }}
             transition={{ duration: 0.2, ease: EASE_GENTLE }}
           >
+            {photographic ? (
+              <EnvelopePhoto
+                src={photographic}
+                aspect={aspect}
+                opening={isOpening}
+                flapMs={PHOTO_FLAP_MS}
+                reduced={Boolean(reduced)}
+              />
+            ) : (
             <svg
               viewBox={`0 0 ${W} ${H}`}
               // Uniform scaling: the envelope keeps its 3:2 proportions
@@ -192,10 +233,15 @@ export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
                 transition={{ duration: FLAP_MS / 1000, ease: EASE_GENTLE }}
               />
             </svg>
+            )}
 
             {/* Wax seal, centred on the flap's point. Positioned in the same
                 percentages the geometry uses, so it stays aligned at any size.
-                Fades as the envelope opens, as though broken. */}
+                Fades as the envelope opens, as though broken.
+
+                Skipped for the photographic envelope, whose artwork is printed
+                with its own seal already in place. */}
+            {!photographic && (
             <m.span
               aria-hidden="true"
               className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -226,6 +272,7 @@ export default function EnvelopeGate({ enabled }: { enabled: boolean }) {
                 <WaxSeal size={SEAL_SIZE} />
               )}
             </m.span>
+            )}
           </m.button>
 
           {/* Prompt. Fades out once opening begins so it doesn't linger. */}

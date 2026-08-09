@@ -7,7 +7,6 @@ import InvitationHero from "@/components/InvitationHero";
 import ScriptureSection from "@/components/ScriptureSection";
 import HeroPortrait from "@/components/HeroPortrait";
 import EventDetails from "@/components/EventDetails";
-import LocationSection from "@/components/LocationSection";
 import ClosingSection from "@/components/ClosingSection";
 import SceneIndicator from "@/components/SceneIndicator";
 
@@ -31,8 +30,9 @@ export default function Page() {
         <ScriptureSection />
         <HeroPortrait />
         <PhotoGallery />
+        {/* Venue and map links are part of EventDetails — they used to sit in
+            a separate scene that repeated the same name and address. */}
         <EventDetails />
-        <LocationSection />
         <ClosingSection />
       </main>
     </MotionProvider>

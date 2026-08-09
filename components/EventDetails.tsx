@@ -1,27 +1,46 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { invitation } from "@/data/invitation";
+import { appleMapsUrl, invitation } from "@/data/invitation";
 import OrthodoxCross from "./OrthodoxCross";
 import Reveal from "./motion/Reveal";
 import Countdown from "./Countdown";
 
 const { event, church, reception, options } = invitation;
+const appleUrl = appleMapsUrl(invitation);
 
-/** One detail block: gold label above a serif value. No cards, no boxes. */
+/**
+ * One detail block: gold label above a serif value. No cards, no boxes.
+ *
+ * `am` renders beneath the English in Amharic. It is set one step quieter —
+ * a translation is a second reading of the same fact, not a second fact, and
+ * giving both equal weight makes the block read as twice as long.
+ */
 function Detail({
   label,
   children,
+  am,
   delay,
 }: {
   label: string;
   children: ReactNode;
+  am?: ReactNode;
   delay: number;
 }) {
   return (
     <Reveal delay={delay} className="flex flex-col items-center gap-xs">
       <dt className="t-label">{label}</dt>
-      <dd className="t-value">{children}</dd>
+      <dd className="t-value">
+        {children}
+        {am && (
+          <span
+            lang="am"
+            className="t-value-sub mt-xs block font-ethiopic normal-case tracking-normal"
+          >
+            {am}
+          </span>
+        )}
+      </dd>
     </Reveal>
   );
 }
@@ -68,23 +87,84 @@ export default function EventDetails() {
         </Reveal>
 
         <dl className="mt-3xl flex flex-col items-center gap-4xl">
-          <Detail label="Date" delay={0.35}>
+          <Detail
+            label="Date"
+            delay={0.35}
+            am={
+              event.dayOfWeekAm && (
+                <>
+                  {event.dayOfWeekAm} · {event.dateLabelAm}
+                </>
+              )
+            }
+          >
             {event.dayOfWeek}
             <br />
             {event.dateLabel}
           </Detail>
 
-          <Detail label="Time" delay={0.45}>
+          <Detail label="Time" delay={0.45} am={event.timeLabelAm}>
             {event.timeLabel}
           </Detail>
 
-          <Detail label="Church" delay={0.55}>
+          {/*
+           * Venue, with the map links attached directly beneath the address
+           * they refer to.
+           *
+           * These used to live in a separate location scene further down,
+           * which meant the name and address were printed twice on the same
+           * page. A guest reading an address wants the map link *there*, not
+           * one scroll later.
+           *
+           * The label is "Where" rather than "Church": the gathering is at
+           * the family home, so `church.name` reads "At Our Home".
+           */}
+          <Detail label="Where" delay={0.55}>
             {church.name}
-            {church.addressLines.map((line) => (
-              <span key={line} className="t-value-sub mt-hair block">
-                {line}
-              </span>
-            ))}
+            <address className="not-italic">
+              {church.addressLines.map((line) => (
+                <span key={line} className="t-value-sub mt-hair block">
+                  {line}
+                </span>
+              ))}
+
+              {/* Amharic directions. These are the family's own words rather
+                  than a translation of the English — for guests navigating
+                  locally, "ከ አፍሪካ ማደያ ገባ ብሎ" is the useful instruction. */}
+              {church.nameAm && (
+                <span
+                  lang="am"
+                  className="mt-lg block font-ethiopic normal-case tracking-normal"
+                >
+                  <span className="t-value-sub block">{church.nameAm}</span>
+                  {church.addressLinesAm?.map((line) => (
+                    <span key={line} className="t-value-sub mt-hair block">
+                      {line}
+                    </span>
+                  ))}
+                </span>
+              )}
+            </address>
+
+            <span className="mt-xl flex flex-col items-center gap-sm">
+              <a
+                href={invitation.maps.google}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline"
+              >
+                <span className="t-label text-ink">Open in Google Maps</span>
+              </a>
+
+              <a
+                href={appleUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-quiet"
+              >
+                <span className="t-whisper">Open in Apple Maps</span>
+              </a>
+            </span>
           </Detail>
 
           {reception && (

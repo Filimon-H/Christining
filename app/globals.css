@@ -224,6 +224,57 @@
     animation: kenburns var(--duration-kenburns) var(--ease-gentle) forwards;
   }
 
+  /* Large cross behind the invitation type.
+
+     A christening's central symbol, at a size where the Ethiopian interlace
+     actually resolves — the openwork loops and latticed centre are illegible
+     below roughly 200px, which is why the small head-of-card cross reads as
+     an ornament and this one reads as the subject.
+
+     Sits behind the text like a watermark pressed into the paper. `z-index: 0`
+     with the sibling content on `auto` would not be enough — the content has
+     no stacking context of its own — so the cross is pulled to a negative
+     index against the card mount, which does establish one. */
+  .cross-watermark {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 0;
+    display: block;
+    width: min(76%, 22rem);
+    /* The centring translate must live here, not on a Reveal — Framer sets
+       its own transform and the two cannot coexist on one element. */
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: cross-watermark-in 2.2s var(--ease-gentle) 0.5s both;
+  }
+
+  .cross-watermark svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* The card's own children need to sit above it. Applied to the mount so
+     every child is lifted, rather than tagging each block individually. */
+  .card-mount > *:not(.cross-watermark):not(.corner-marks) {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Scroll cue.
+
+     The arrow fades in once and then has to keep signalling that the page
+     continues, so it drifts a couple of pixels on a long, soft cycle. The
+     travel is deliberately smaller than a typical bouncing chevron: at this
+     amplitude it reads as breathing rather than as a nagging prompt.
+
+     The blanket reduced-motion rule below disables this, which is correct —
+     the arrow glyph itself still states the affordance. */
+  .scroll-cue-drift {
+    animation: scroll-cue-drift 2.6s ease-in-out infinite;
+  }
+
   /* Caption arrives with a small rise, supporting the photo crossfade. */
   .caption-rise {
     animation: caption-rise 1s cubic-bezier(0.4, 0, 0.2, 1) both;
@@ -407,6 +458,29 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Fades to a watermark, never to full strength — 0.07 is the target, not a
+   waypoint. Kept as a keyframe so the reduced-motion rule below collapses it
+   to its end state rather than leaving the cross invisible. */
+@keyframes cross-watermark-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.07;
+  }
+}
+
+/* 3px of travel, easing to a brief rest at each end. */
+@keyframes scroll-cue-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
   }
 }
 

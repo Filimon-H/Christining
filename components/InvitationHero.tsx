@@ -5,7 +5,7 @@ import OrthodoxCross from "./OrthodoxCross";
 import Ornament from "./Ornament";
 import Reveal from "./motion/Reveal";
 
-const { child, parents, event, church, geez } = invitation;
+const { child, parents, event, geez } = invitation;
 
 /**
  * Scene 1 — the invitation itself.
@@ -50,6 +50,30 @@ export default function InvitationHero() {
           <span />
         </span>
 
+        {/*
+         * Large cross, centred behind the invitation text.
+         *
+         * A christening's central symbol should read as the thing the page is
+         * about, not as a 40px ornament above a heading. At this scale the
+         * Ethiopian interlace is actually legible — the openwork loops and
+         * latticed centre only resolve above roughly 200px.
+         *
+         * Sits behind the type at low opacity, like a watermark pressed into
+         * the paper, so it never competes with the child's name. Absolutely
+         * positioned and pointer-inert so it takes no layout space and cannot
+         * intercept a tap.
+         */}
+        {/*
+         * Not a Reveal: that animates opacity to 1, which would blow out the
+         * watermark, and sets its own transform, which fights the centring
+         * translate. A plain element with a CSS fade keeps both under our
+         * control.
+         */}
+        <span aria-hidden="true" className="cross-watermark">
+          <OrthodoxCross size={340} className="h-auto w-full" />
+        </span>
+
+        {/* Small cross at the head of the invitation, as a printed card has. */}
         <Reveal trigger="mount" duration={1.1} y={0}>
           <span className="cross-halo inline-block">
             <OrthodoxCross size={40} />
@@ -98,23 +122,25 @@ export default function InvitationHero() {
           <div className="rule-ornate" />
         </Reveal>
 
+        {/*
+         * Date only — no time, no venue.
+         *
+         * The full particulars belong to the details scene. Repeating them
+         * here made the invitation read as a summary of a page the guest had
+         * not reached yet, and put the venue on screen three separate times
+         * across the site. The date is the one fact worth stating twice: it
+         * is what a guest needs before deciding to read on.
+         */}
         <Reveal trigger="mount" delay={1.0} className="mt-lg">
           <p className="t-value">
             {event.dayOfWeek}
             <br />
             {event.dateLabel}
-            <br />
-            {event.timeLabel}
           </p>
         </Reveal>
 
-        <Reveal trigger="mount" delay={1.1} className="mt-lg">
-          <p className="t-value">{church.name}</p>
-          <p className="t-value-sub mt-hair">{church.locality}</p>
-        </Reveal>
-
         {geez && (
-          <Reveal trigger="mount" delay={1.2} className="mt-xl">
+          <Reveal trigger="mount" delay={1.1} className="mt-xl">
             <p lang="am" className="font-ethiopic text-label normal-case tracking-normal text-ink-muted">
               {geez}
             </p>
@@ -145,7 +171,10 @@ export default function InvitationHero() {
           duration={1.2}
           className="mt-3xl flex flex-col items-center gap-xs"
         >
-          <span aria-hidden="true" className="text-lg leading-none text-accent">
+          <span
+            aria-hidden="true"
+            className="scroll-cue-drift text-lg leading-none text-accent"
+          >
             &darr;
           </span>
           <span className="t-whisper">Scroll to continue</span>

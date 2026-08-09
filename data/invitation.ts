@@ -36,12 +36,19 @@ export type Invitation = {
     dateLabel: string;
     timeLabel: string;
     year: string;
+    /** Amharic day + date, shown beneath the English. */
+    dayOfWeekAm?: string;
+    dateLabelAm?: string;
+    timeLabelAm?: string;
   };
   church: {
     name: string;
     addressLines: string[];
     /** Short label used under the invitation heading */
     locality: string;
+    /** Amharic venue name and address, shown beneath the English. */
+    nameAm?: string;
+    addressLinesAm?: string[];
   };
   reception?: {
     name: string;
@@ -75,6 +82,18 @@ export type Invitation = {
      * Leave undefined to use the built-in drawn seal instead.
      */
     sealImage?: string;
+    /**
+     * Path to a photographic envelope image, e.g. "/photos/envelope.jpg".
+     * Must be shot square-on and cropped to the paper edge — the cover
+     * displays it flat, with no perspective correction of its own.
+     *
+     * When set, this replaces the drawn SVG envelope *and* the separate wax
+     * seal: the artwork already carries its own seal, so `sealImage` is
+     * ignored. Leave undefined to use the drawn envelope.
+     */
+    envelopeImage?: string;
+    /** Aspect ratio (width / height) of `envelopeImage`. Required with it. */
+    envelopeAspect?: number;
     /** Show the countdown in the details section */
     countdown: boolean;
     /** Show the "Sacred music" toggle. Requires audioSrc. */
@@ -102,6 +121,21 @@ export const invitation: Invitation = {
     dateLabel: "23 August 2026",
     timeLabel: "Lunch Time",
     year: "2026",
+
+    /*
+     * Amharic date, in the Ethiopian calendar — the family's own wording.
+     *
+     * ነሃሴ 17 2018 E.C. is the same day as 23 August 2026 (verified by
+     * conversion, not assumed). Ethiopian guests read and plan by this
+     * calendar, so this is the date that will actually mean something to
+     * them; the Gregorian line above sits directly beside it for anyone
+     * reading in English.
+     *
+     * Spelling follows the family: ነሃሴ rather than the more common ነሐሴ.
+     */
+    dayOfWeekAm: "እሁድ",
+    dateLabelAm: "ነሃሴ 17 2018",
+    timeLabelAm: "የምሳ ሰዓት",
   },
 
   /*
@@ -111,21 +145,40 @@ export const invitation: Invitation = {
   church: {
     name: "At Our Home",
     addressLines: [
+      "Just in from the Africa fuel station",
       "Near Assela Menahriya",
-      "Next to Highleahue School",
     ],
     locality: "Near Assela Menahriya",
+
+    /*
+     * Amharic venue and directions.
+     *
+     * "ከ አፍሪካ ማደያ ገባ ብሎ" is the family's own wording, kept verbatim — it is
+     * how a local would actually give these directions, and "ገባ ብሎ" (just in
+     * from / set back from) carries a precision that no literal translation
+     * of an English address would.
+     */
+    nameAm: "በቤታችን",
+    addressLinesAm: [
+      "ከ አፍሪካ ማደያ ገባ ብሎ",
+      "አሰላ መናኃሪያ አካባቢ",
+    ],
   },
 
   // No separate reception — the baptism celebration is the gathering at home.
   reception: undefined,
 
+  /*
+   * Dropped pin supplied by the family (maps.app.goo.gl/jZVLno5mCYb87RJp9),
+   * resolved to its coordinates here so the link never depends on Google's
+   * short-link service staying up.
+   *
+   * Both apps get the same lat/long, so both open the identical spot rather
+   * than Apple guessing from a text address.
+   */
   maps: {
-    // ⚠️ Replace with a dropped pin on the house so relatives navigate exactly.
-    // In Google Maps: long-press the spot → Share → Copy link.
-    google:
-      "https://www.google.com/maps/search/?api=1&query=Highleahue+School+Assela",
-    apple: undefined, // auto-generated from the address if left undefined
+    google: "https://www.google.com/maps/search/?api=1&query=8.525618,39.280536",
+    apple: "https://maps.apple.com/?ll=8.525618,39.280536&q=Amaldan%27s%20Christening",
   },
 
   scripture: {
@@ -200,6 +253,11 @@ export const invitation: Invitation = {
     // The supplied seal artwork, with its grey backdrop keyed out by
     // scripts/cutout-seal.mjs. Set to undefined to fall back to the drawn seal.
     sealImage: "/seal.png",
+    // Photographic envelope, deskewed to a true rectangle from the supplied
+    // artwork by scripts/deskew-envelope.mjs. Because it carries its own
+    // printed seal, `sealImage` above is unused while this is set.
+    envelopeImage: "/photos/envelope.jpg",
+    envelopeAspect: 1800 / 1243,
     countdown: false, // off by default — keeps the tone intimate rather than event-like
     music: false,
     audioSrc: undefined,
