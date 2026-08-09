@@ -69,8 +69,15 @@ export default function InvitationHero() {
          * translate. A plain element with a CSS fade keeps both under our
          * control.
          */}
+        {/*
+         * The gold interlaced cross supplied by the family, in place of the
+         * drawn SVG. Plain <img>, not next/image: the file is already sized and
+         * compressed for exactly this one use, so the optimiser has nothing to
+         * add, and fill/sizes would only complicate the centring.
+         */}
         <span aria-hidden="true" className="cross-watermark">
-          <OrthodoxCross size={340} className="h-auto w-full" />
+          {/* eslint-disable-next-line @next/next/no-img-element -- see above */}
+          <img src="/cross.png" alt="" width={492} height={519} decoding="async" />
         </span>
 
         {/* Small cross at the head of the invitation, as a printed card has. */}
@@ -105,10 +112,23 @@ export default function InvitationHero() {
           {/*
            * The father's name sits inside the same h1 so the full name is one
            * heading to a screen reader ("Amaldan Filimon"), while being set as
-           * two lines visually — the given name at display size, the father's
-           * name smaller beneath it, the way Ethiopian names are written.
+           * two lines visually, the way Ethiopian names are written. Both lines
+           * share one size — see .t-name-family.
+           *
+           * The size step keys off the LONGER of the two names, not just the
+           * given name: now that the second line is set at the same size, it is
+           * the one that decides whether the block fits a 320px screen.
            */}
-          <h1 className={child.name.length > 12 ? "t-name-long" : "t-name"}>
+          <h1
+            className={
+              Math.max(
+                child.name.length,
+                child.familyName?.length ?? 0
+              ) > 12
+                ? "t-name-long"
+                : "t-name"
+            }
+          >
             {child.name}
             {child.familyName && (
               <span className="t-name-family">{child.familyName}</span>

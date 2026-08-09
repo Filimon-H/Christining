@@ -163,23 +163,20 @@
    * `em` units mean it tracks the name above it across both size steps.
    */
   /*
-   * Every font property here is inherited from .t-name — family, style, weight,
-   * variation settings — so the two lines are the same cut of Cormorant. Only
-   * the size differs.
+   * The father's name, on its own line at the same size as the given name.
    *
-   * 0.62em, not the 0.46em tried first. Cormorant is an optical-size-sensitive
-   * design: the same outlines at 20px look proportionally heavier and wider
-   * than at 43px, so a large size gap made the second line read as a different
-   * typeface even though the computed styles matched exactly. Closing the gap
-   * keeps both in a similar optical range while preserving the hierarchy.
+   * Every font property is inherited, size included, so the two lines are one
+   * name in one voice — which is what the family asked for. Earlier versions
+   * stepped the size down (0.46em, then 0.62em); at any reduction Cormorant's
+   * optical-size sensitivity made the smaller line read as a different
+   * typeface, so matching outright is both simpler and truer.
+   *
+   * Hierarchy now comes from order and leading rather than scale.
    */
   .t-name-family {
     display: block;
-    margin-top: 0.06em;
-    font-size: 0.62em;
-    letter-spacing: 0.005em;
-    line-height: 1.15;
-    color: var(--ink);
+    margin-top: -0.06em;
+    line-height: 1.06;
   }
 
   /* ── Structure ──────────────────────────────── */
@@ -282,7 +279,8 @@
     animation: cross-watermark-in 2.2s var(--ease-gentle) 0.5s both;
   }
 
-  .cross-watermark svg {
+  .cross-watermark svg,
+  .cross-watermark img {
     display: block;
     width: 100%;
     height: auto;
@@ -497,12 +495,19 @@
 /* Fades to a watermark, never to full strength — 0.07 is the target, not a
    waypoint. Kept as a keyframe so the reduced-motion rule below collapses it
    to its end state rather than leaving the cross invisible. */
+/*
+ * 0.05, down from the 0.07 the line-art SVG used.
+ *
+ * The gold artwork is a rendered object with fill, shading and gemstones, so it
+ * carries far more visual weight than thin strokes did at the same opacity —
+ * at 0.07 it started competing with the name rather than sitting behind it.
+ */
 @keyframes cross-watermark-in {
   from {
     opacity: 0;
   }
   to {
-    opacity: 0.07;
+    opacity: 0.05;
   }
 }
 
