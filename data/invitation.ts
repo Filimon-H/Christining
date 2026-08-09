@@ -221,47 +221,66 @@ export const invitation: Invitation = {
    * tall phone screen a good deal is cropped from top and bottom — each value
    * is set to keep Amaldan's face in frame.
    */
+  /*
+   * `position` is CSS object-position, tuned per photograph.
+   *
+   * Most of these are square and fill a tall phone screen, so a good deal is
+   * cropped from the top and bottom. Each value keeps Amaldan's face in frame;
+   * where she is off-centre the horizontal value shifts too.
+   */
   heroPhoto: {
     src: "/photos/hero.jpg",
-    alt: "Amaldan smiling wide, wrapped in a soft pink blanket with her hands tucked under her chin",
-    position: "50% 30%",
+    alt: "Amaldan in a pink bow headband, lying beside a large teddy bear and reaching for it",
+    /*
+     * She lies at the far left of a square frame, so a tall crop has to hold
+     * the left edge or her face is cut in half. 0% keeps her whole and lets the
+     * teddy bear fall away to the right, which is the right trade — she is the
+     * subject, the bear is context.
+     */
+    position: "0% 55%",
     caption: "Our little blessing.",
   },
 
   gallery: [
     {
       src: "/photos/01.jpg",
-      alt: "Amaldan lying beside a small teddy bear, looking directly at the camera",
-      position: "68% 42%",
+      alt: "Amaldan wrapped in a soft grey hooded blanket, glancing to one side",
+      position: "50% 34%",
     },
     {
       src: "/photos/02.jpg",
-      alt: "A close portrait of Amaldan resting on a blanket, wide awake",
-      position: "40% 60%",
+      alt: "Amaldan smiling wide with both hands curled beneath her chin, on a cream sheepskin",
+      position: "50% 38%",
       caption: "Wonderfully made.",
     },
     {
       src: "/photos/03.jpg",
-      alt: "Amaldan in a pink dress and flower headband, holding a red balloon at two months old",
-      position: "50% 32%",
+      alt: "A close portrait of Amaldan resting on a cream blanket, wide awake",
+      position: "42% 62%",
     },
     {
       src: "/photos/04.jpg",
-      alt: "Amaldan looking upward with a gentle smile, red balloons beside her",
-      position: "50% 42%",
+      alt: "Amaldan in a cream flower headband, looking past the camera in profile",
+      position: "44% 46%",
       caption: "Growing in grace.",
     },
     {
       src: "/photos/05.jpg",
-      alt: "Amaldan laughing in a yellow and black striped outfit, surrounded by flowers",
-      position: "50% 26%",
+      alt: "Amaldan laughing in a blush ruffled dress, looking upward",
+      position: "52% 30%",
+    },
+    {
+      src: "/photos/06.jpg",
+      alt: "Amaldan wrapped in a soft patterned shawl, looking straight at the camera",
+      position: "50% 40%",
+      caption: "A gift from God.",
     },
   ],
 
   closingPhoto: {
     src: "/photos/closing.jpg",
-    alt: "Amaldan asleep in a white hooded outfit on a soft pink blanket",
-    position: "50% 45%",
+    alt: "Amaldan asleep, bundled in a soft blanket beside cream flowers",
+    position: "50% 42%",
   },
 
   // Optional second gallery. Leave as [] to hide the section entirely.
