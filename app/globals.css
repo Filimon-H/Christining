@@ -154,20 +154,21 @@
   /*
    * The father's name, on its own line beneath the given name.
    *
-   * Roughly a third of the display size, upright rather than italic, and
-   * letterspaced — so it reads as a second, quieter line rather than competing
-   * with the centrepiece. `em` units keep it proportional as the name above it
-   * scales between the two size steps.
+   * Same voice as the given name — italic Cormorant at the same light weight,
+   * inheriting both — and separated by size alone rather than by switching to
+   * upright letterspaced type, which read as a different typeface sitting under
+   * the centrepiece.
+   *
+   * 0.46em keeps a clear hierarchy while staying unmistakably the same hand.
+   * `em` units mean it tracks the name above it across both size steps.
    */
   .t-name-family {
     display: block;
-    margin-top: 0.16em;
-    font-size: 0.34em;
-    font-style: normal;
-    font-weight: 400;
-    letter-spacing: 0.13em;
-    line-height: 1.3;
-    color: var(--ink-muted);
+    margin-top: 0.1em;
+    font-size: 0.46em;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    color: var(--ink);
   }
 
   /* ── Structure ──────────────────────────────── */
