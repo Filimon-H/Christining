@@ -102,8 +102,17 @@ export default function InvitationHero() {
          * rather than forcing every name to the smallest common size.
          */}
         <Reveal trigger="mount" delay={0.7} className="mt-lg">
+          {/*
+           * The father's name sits inside the same h1 so the full name is one
+           * heading to a screen reader ("Amaldan Filimon"), while being set as
+           * two lines visually — the given name at display size, the father's
+           * name smaller beneath it, the way Ethiopian names are written.
+           */}
           <h1 className={child.name.length > 12 ? "t-name-long" : "t-name"}>
             {child.name}
+            {child.familyName && (
+              <span className="t-name-family">{child.familyName}</span>
+            )}
           </h1>
         </Reveal>
 

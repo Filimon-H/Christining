@@ -33,7 +33,13 @@ const ethiopic = Noto_Serif_Ethiopic({
   preload: false,
 });
 
-const title = `You're Invited • ${invitation.child.shortName}'s Holy Baptism`;
+/* The full name in the share preview — it is how relatives will recognise her
+   when the link lands in a family group. */
+const fullName = invitation.child.familyName
+  ? `${invitation.child.shortName} ${invitation.child.familyName}`
+  : invitation.child.shortName;
+
+const title = `You're Invited • ${fullName}'s Holy Baptism`;
 const description =
   "Please join us as we celebrate the Holy Baptism of our beloved daughter.";
 

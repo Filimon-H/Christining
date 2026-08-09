@@ -105,7 +105,7 @@ export default function EnvelopePhoto({
        */}
       <m.div
         aria-hidden="true"
-        className="absolute rounded-[2px] bg-surface"
+        className="absolute rounded-paper bg-surface"
         style={{
           left: "7%",
           right: "7%",

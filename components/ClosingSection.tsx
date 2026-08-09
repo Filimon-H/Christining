@@ -70,7 +70,10 @@ export default function ClosingSection() {
 
         <Reveal delay={0.65} className="mt-4xl">
           <p className="t-whisper">
-            {child.shortName} &nbsp;&middot;&nbsp; Holy Baptism
+            {child.familyName
+              ? `${child.shortName} ${child.familyName}`
+              : child.shortName}{" "}
+            &nbsp;&middot;&nbsp; Holy Baptism
             &nbsp;&middot;&nbsp; {event.year}
           </p>
         </Reveal>

@@ -24,6 +24,15 @@ export type GalleryPhoto = {
 export type Invitation = {
   child: {
     name: string;
+    /**
+     * The father's given name, following Ethiopian naming convention.
+     *
+     * Kept separate from `name` rather than concatenated so the given name can
+     * stay the large centrepiece with this set beneath it in smaller type —
+     * "Amaldan Filimon" as one string would force the whole line down a size
+     * step to fit a phone screen.
+     */
+    familyName?: string;
     baptismName?: string;
     /** Shown in the browser tab / OG title */
     shortName: string;
@@ -105,6 +114,7 @@ export type Invitation = {
 export const invitation: Invitation = {
   child: {
     name: "Amaldan",
+    familyName: "Filimon",
     baptismName: undefined, // Christian name given at baptism — optional
     shortName: "Amaldan",
   },

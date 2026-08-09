@@ -87,24 +87,40 @@ export default function EventDetails() {
         </Reveal>
 
         <dl className="mt-3xl flex flex-col items-center gap-4xl">
+          {/*
+           * "When" — one entry, not a Date block followed by a Time block.
+           *
+           * The invitation already announces the day and date, so repeating
+           * them under their own heading here read as a summary of a page the
+           * guest had just come from. Folding the time in gives this scene the
+           * fact the invitation deliberately withholds, states the date once as
+           * context rather than as news, and carries the Amharic date, which
+           * appears nowhere else.
+           */}
           <Detail
-            label="Date"
+            label="When"
             delay={0.35}
             am={
-              event.dayOfWeekAm && (
+              (event.dayOfWeekAm || event.timeLabelAm) && (
                 <>
-                  {event.dayOfWeekAm} · {event.dateLabelAm}
+                  {event.dayOfWeekAm && (
+                    <>
+                      {event.dayOfWeekAm} · {event.dateLabelAm}
+                    </>
+                  )}
+                  {event.timeLabelAm && (
+                    <>
+                      <br />
+                      {event.timeLabelAm}
+                    </>
+                  )}
                 </>
               )
             }
           >
-            {event.dayOfWeek}
+            {event.dayOfWeek} &middot; {event.dateLabel}
             <br />
-            {event.dateLabel}
-          </Detail>
-
-          <Detail label="Time" delay={0.45} am={event.timeLabelAm}>
-            {event.timeLabel}
+            <span className="text-accent-strong">{event.timeLabel}</span>
           </Detail>
 
           {/*
