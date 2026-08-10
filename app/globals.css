@@ -45,8 +45,13 @@
    * margin, which combined with the card's max-width left the invitation looking
    * like a small panel adrift on a large field. A narrower gutter lets the card
    * take the width it is given, which is what makes it read as a held card.
+   *
+   * The floor is 0.5rem rather than 1rem: on a 390px phone the card is bounded
+   * by the viewport, not by its max-width, so every pixel of gutter comes
+   * straight off the card. Half a rem still keeps the paper edge and its
+   * shadow clear of the screen edge, which is all the margin a held card needs.
    */
-  --gutter: clamp(1rem, 4vw, 4rem);
+  --gutter: clamp(0.5rem, 4vw, 4rem);
 }
 
 @layer base {
@@ -366,6 +371,20 @@
     animation: scroll-cue-drift 2.6s ease-in-out infinite;
   }
 
+  /* The envelope's "tap to open" prompt.
+
+     A guest has to know the envelope is the thing to press, and a static line
+     of small caps below it was being read as a caption rather than an
+     instruction. The pulse is carried on opacity and a very slight scale —
+     never on colour — so it reads as breathing rather than as a blinking
+     alert, and the long 2.8s cycle keeps it patient rather than nagging.
+
+     Disabled by the blanket reduced-motion rule below; the wording still
+     states the affordance without it. */
+  .tap-pulse {
+    animation: tap-pulse 2.8s ease-in-out infinite;
+  }
+
   /* Caption arrives with a small rise, supporting the photo crossfade. */
   .caption-rise {
     animation: caption-rise 460ms cubic-bezier(0.4, 0, 0.2, 1) both;
@@ -587,6 +606,18 @@
 }
 
 /* 3px of travel, easing to a brief rest at each end. */
+@keyframes tap-pulse {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
 @keyframes scroll-cue-drift {
   0%,
   100% {

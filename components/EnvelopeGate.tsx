@@ -311,9 +311,21 @@ export default function EnvelopeGate({
             )}
           </m.button>
 
-          {/* Prompt. Fades out once opening begins so it doesn't linger. */}
+          {/*
+           * Prompt. Fades out once opening begins so it doesn't linger.
+           *
+           * Set larger and in gold rather than as a whisper: this is the only
+           * instruction on the screen, and at the previous size it read as a
+           * caption under the envelope rather than as the thing to do. The
+           * pulse carries the same message for anyone who does not read it.
+           *
+           * The pulse is dropped the moment the envelope is opening — a prompt
+           * that keeps beckoning after it has been obeyed is noise.
+           */}
           <m.span
-            className="t-whisper mt-2xl text-center"
+            className={`t-label mt-2xl text-center text-[0.95rem] tracking-[0.22em] ${
+              isOpening || reduced ? "" : "tap-pulse"
+            }`}
             animate={{ opacity: isOpening ? 0 : 1 }}
             transition={{ duration: 0.3, ease: EASE_GENTLE }}
           >

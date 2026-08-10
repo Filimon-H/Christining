@@ -37,7 +37,20 @@ export default function InvitationHero() {
        * inside, which is what the printed reference has and a bare centred
        * column does not.
        */}
-      <div className="card-mount flex w-full max-w-invitation flex-col items-center px-lg py-2xl text-center">
+      {/*
+       * Padding is fluid rather than a fixed step: on a 390px phone the card is
+       * bounded by the viewport, so a fixed `px-lg` spends screen width the type
+       * needs, while on desktop the same value looks mean against a 38rem card.
+       */}
+      <div
+        className="card-mount flex w-full max-w-invitation flex-col items-center text-center"
+        style={{
+          paddingLeft: "clamp(1rem, 5vw, 2.5rem)",
+          paddingRight: "clamp(1rem, 5vw, 2.5rem)",
+          paddingTop: "clamp(2rem, 7vw, 3.5rem)",
+          paddingBottom: "clamp(2rem, 7vw, 3.5rem)",
+        }}
+      >
         {/* Four gold corner brackets. Decorative. */}
         <span aria-hidden="true" className="corner-marks">
           <span />

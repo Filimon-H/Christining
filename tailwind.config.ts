@@ -179,12 +179,12 @@ export default {
 
       /** Content measures, so line length stays readable. */
       maxWidth: {
-        invitation: "34rem",
+        invitation: "38rem",
         prose: "36rem",
         location: "30rem",
         closing: "32rem",
         /** The envelope cover — nearly full-bleed on a phone, generous on desktop */
-        envelope: "40rem",
+        envelope: "46rem",
         /** Ge'ez directions — a measure so they wrap rather than run edge to edge */
         geez: "22ch",
         /** Divider widths */
