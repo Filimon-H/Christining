@@ -16,6 +16,13 @@ import SceneIndicator from "@/components/SceneIndicator";
  */
 const PhotoGallery = dynamic(() => import("@/components/PhotoGallery"));
 
+/**
+ * The guest uploader is inert until someone taps it, and it sits near the foot
+ * of the page — so its upload machinery has no business competing with the
+ * invitation for bandwidth. Split out, it downloads while the guest reads.
+ */
+const GuestPhotos = dynamic(() => import("@/components/GuestPhotos"));
+
 export default function Page() {
   return (
     <MotionProvider>
@@ -34,6 +41,11 @@ export default function Page() {
         {/* Venue and map links are part of EventDetails — they used to sit in
             a separate scene that repeated the same name and address. */}
         <EventDetails />
+        {/* Placed after the details and before the blessing: the ask only makes
+            sense once a guest knows when and where, and the closing should stay
+            the last word on the page. Renders nothing if Cloudinary is not
+            configured. */}
+        <GuestPhotos />
         <ClosingSection />
       </main>
     </MotionProvider>

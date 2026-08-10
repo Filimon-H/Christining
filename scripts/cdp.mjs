@@ -88,7 +88,7 @@ console.log("\n— invitation (scene 1) —");
 console.log(await evaluate(opacities("invitation")));
 await shoot("cdp-01-invitation");
 
-for (const id of ["blessing", "gallery", "details"]) {
+for (const id of ["blessing", "gallery", "details", "photos"]) {
   await evaluate(
     `document.getElementById(${JSON.stringify(id)})?.scrollIntoView()`
   );

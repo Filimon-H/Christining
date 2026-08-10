@@ -235,13 +235,26 @@ export default {
       /** Fixed sizes for small fixed-dimension UI. */
       size: {
         dot: "0.3125rem",
+        /** The tick badge on a delivered upload tile. */
+        badge: "1rem",
       },
       height: {
         dot: "0.3125rem",
+        /** Upload progress bar — 2px, the thinnest that still reads as a bar. */
+        bar: "0.125rem",
       },
       width: {
         /** The active gallery dot, elongated */
         3: "0.875rem",
+        /**
+         * A guest-upload confirmation tile.
+         *
+         * Fixed rather than a grid fraction: the tiles wrap and centre, so a
+         * part-filled last row sits under the middle of the text above it
+         * instead of hanging left. 4.5rem fits four across a 390px phone
+         * inside the gutter, and keeps twenty of them to a glanceable block.
+         */
+        tile: "4.5rem",
       },
 
       /**

@@ -329,4 +329,10 @@ export const SCENES = [
   { id: "blessing", label: "Blessing" },
   { id: "gallery", label: "Gallery" },
   { id: "details", label: "Details" },
+  /*
+   * Present whether or not Cloudinary is configured. The indicator drops
+   * entries whose section is absent from the DOM, so an unconfigured build
+   * simply shows four dots rather than a fifth that scrolls nowhere.
+   */
+  { id: "photos", label: "Photographs" },
 ] as const;

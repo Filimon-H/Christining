@@ -36,6 +36,26 @@ const RETIRED = {
 /** Utilities whose values must come from the scale, not arbitrary literals. */
 const ARBITRARY = /\b(?:m|p)(?:[trblxy])?-\[|(?:gap|w|h|text|z|max-w|min-h|min-w|rounded|border)-\[/;
 
+/**
+ * Numeric spacing utilities — `w-16`, `size-4`, `h-0.5`, `gap-2`.
+ *
+ * The theme *replaces* Tailwind's spacing scale with named roles (hair, xs,
+ * sm …), so there is no `16` or `4` key and these emit no CSS at all. That
+ * fails silently: the class stays in the markup and the element simply takes
+ * its intrinsic size, which is how an upload tile meant to be 4.5rem rendered
+ * at 202px and broke the grid.
+ *
+ * Two exemptions, both real keys on the scale:
+ *   `0`  — declared, so `inset-0` / `bottom-0` emit correctly and are used
+ *          throughout for full-bleed overlays and pinned controls.
+ *   `w-3` — the one legitimate numeric width, declared explicitly in the
+ *          config for the elongated gallery dot.
+ *
+ * Anything else numeric is a silent no-op.
+ */
+const NUMERIC_SPACING =
+  /["'\s](?:size|gap|[wh]|p[trblxy]?|m[trblxy]?|top|bottom|left|right|inset(?:-[xy])?)-(?!0["'\s])(?!3["'\s])\d+(?:\.\d+)?(?=["'\s])/;
+
 const ROOTS = ["app", "components", "data", "lib"];
 const problems = [];
 
@@ -85,6 +105,18 @@ function inspect(path) {
     ) {
       problems.push(
         `${path}:${index + 1}  arbitrary value — add a token instead:\n      ${trimmed.slice(0, 100)}`
+      );
+    }
+
+    // Numeric spacing emits nothing against the replaced scale — see above.
+    if (
+      !path.endsWith("globals.css") &&
+      !path.includes("tailwind.config") &&
+      NUMERIC_SPACING.test(line)
+    ) {
+      const hit = line.match(NUMERIC_SPACING)[0].trim();
+      problems.push(
+        `${path}:${index + 1}  "${hit}" emits no CSS — the spacing scale is named (hair, xs, sm, md, lg, xl …), not numeric:\n      ${trimmed.slice(0, 100)}`
       );
     }
   });
