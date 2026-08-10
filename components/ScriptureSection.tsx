@@ -21,11 +21,7 @@ export default function ScriptureSection() {
     <section
       id="blessing"
       aria-label="A blessing"
-      className="scene bg-surface-alt"
-      style={{
-        paddingTop: "calc(var(--safe-top) + 3rem)",
-        paddingBottom: "calc(var(--safe-bottom) + 3rem)",
-      }}
+      className="scene scene-snug bg-surface-alt"
     >
       {/*
        * The same mount and corner brackets as the invitation, so the two
@@ -38,7 +34,7 @@ export default function ScriptureSection() {
        * scene matches how the invitation and details cards sit in theirs, and
        * the content stays optically centred because the figure centres it.
        */}
-      <figure className="card-mount flex w-full max-w-prose flex-1 flex-col items-center justify-center px-lg py-2xl text-center">
+      <figure className="card-mount flex w-full max-w-prose flex-col items-center justify-center px-lg py-4xl text-center">
         <span aria-hidden="true" className="corner-marks">
           <span />
           <span />

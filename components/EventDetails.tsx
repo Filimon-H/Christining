@@ -56,11 +56,7 @@ export default function EventDetails() {
     <section
       id="details"
       aria-labelledby="details-heading"
-      className="scene bg-surface"
-      style={{
-        paddingTop: "calc(var(--safe-top) + 4.5rem)",
-        paddingBottom: "calc(var(--safe-bottom) + 4.5rem)",
-      }}
+      className="scene scene-snug bg-surface"
     >
       <div className="card-mount flex w-full max-w-invitation flex-col items-center px-lg py-2xl text-center">
         <span aria-hidden="true" className="corner-marks">

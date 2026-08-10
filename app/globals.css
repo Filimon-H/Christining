@@ -30,9 +30,9 @@
   --duration-fade: 500ms;
   --duration-section: 900ms;
   --duration-slide: 1000ms;
-  /* Matches the gallery's 3s dwell plus its 700ms crossfade, so the drift
+  /* Matches the gallery's 2s dwell plus its 500ms crossfade, so the drift
      completes as the slide hands over rather than being cut off mid-move. */
-  --duration-kenburns: 3700ms;
+  --duration-kenburns: 2500ms;
 
   /* iPhone safe areas */
   --safe-top: env(safe-area-inset-top, 0px);
@@ -152,17 +152,6 @@
   }
 
   /*
-   * The father's name, on its own line beneath the given name.
-   *
-   * Same voice as the given name — italic Cormorant at the same light weight,
-   * inheriting both — and separated by size alone rather than by switching to
-   * upright letterspaced type, which read as a different typeface sitting under
-   * the centrepiece.
-   *
-   * 0.46em keeps a clear hierarchy while staying unmistakably the same hand.
-   * `em` units mean it tracks the name above it across both size steps.
-   */
-  /*
    * The father's name, on its own line at the same size as the given name.
    *
    * Every font property is inherited, size included, so the two lines are one
@@ -182,14 +171,78 @@
   /* ── Structure ──────────────────────────────── */
 
   /**
-   * Full-height scene. `min-h-svh` (not `h-svh`) so a tall invitation grows
-   * and scrolls rather than clipping its closing lines on a short viewport.
-   * svh avoids the iOS Safari toolbar jump that plagues vh.
+   * A scene sized to its content, with a floor rather than a fixed height.
+   *
+   * `min-height: 100svh` alone forced every scene to a full screen even when
+   * its card needed far less. On a tall Android viewport (~1050 CSS px) that
+   * left roughly 300px of bare cream around a 736px card, which reads as the
+   * page having been padded out. Sizing to content plus generous padding keeps
+   * the card and its surroundings proportionate at any height, while the 100svh
+   * floor still guarantees a short viewport gets a full screen per scene.
+   *
+   * svh, not vh: it avoids the iOS Safari toolbar jump.
    */
   .scene {
-    @apply relative flex min-h-svh flex-col items-center justify-center;
+    @apply relative flex flex-col items-center justify-center;
+    min-height: 100svh;
     padding-left: var(--gutter);
     padding-right: var(--gutter);
+  }
+
+  /*
+   * Scenes whose card is sized by its content rather than by the viewport.
+   * `height: auto` releases the flex stretch so the card keeps its natural
+   * height and the scene wraps closely around it.
+   */
+  .scene-snug {
+    min-height: auto;
+    /* Fluid, and carrying the safe-area insets that used to sit in an inline
+       style on each section — an inline style would override this class. */
+    padding-top: calc(var(--safe-top) + clamp(3rem, 8svh, 5.5rem));
+    padding-bottom: calc(var(--safe-bottom) + clamp(3rem, 8svh, 5.5rem));
+  }
+
+  /*
+   * A "there is more below" cue, fixed to the foot of the viewport.
+   *
+   * Guests were reaching the invitation and stopping, never learning there was
+   * a photo story beneath it. The first attempt at this shortened the first
+   * scene so the next card would peek above the fold, but a height floor cannot
+   * create a peek when the content is already taller than the screen — measured
+   * 0px of the second scene visible on a tall phone.
+   *
+   * So the cue is pinned to the viewport rather than to the layout: a soft cream
+   * fade at the very bottom edge with the arrow inside it, present until the
+   * guest scrolls. Because it is fixed, it works at any content height.
+   */
+  .scroll-hint {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 8.5rem;
+    padding-bottom: calc(var(--safe-bottom) + 1.25rem);
+    pointer-events: none;
+    background: linear-gradient(
+      to top,
+      rgb(250 247 240 / 0.94) 0%,
+      rgb(250 247 240 / 0.72) 45%,
+      rgb(250 247 240 / 0) 100%
+    );
+    transition: opacity 600ms var(--ease-gentle);
+  }
+
+  /* Set once the guest scrolls: the cue has done its job. */
+  .scroll-hint[data-hidden="true"] {
+    opacity: 0;
+  }
+
+  .scroll-hint-arrow {
+    animation: hint-bob 2.4s var(--ease-gentle) infinite;
   }
 
   /* Section that sizes to its content rather than the viewport. */
@@ -308,7 +361,7 @@
 
   /* Caption arrives with a small rise, supporting the photo crossfade. */
   .caption-rise {
-    animation: caption-rise 620ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation: caption-rise 460ms cubic-bezier(0.4, 0, 0.2, 1) both;
   }
 
   /* Cream scrim so captions stay legible over bright photographs. */
@@ -481,6 +534,21 @@
   }
 }
 
+/*
+ * The scroll arrow drifts a few pixels. Small enough to read as breathing
+ * rather than as a nagging bounce, and slow enough not to draw the eye away
+ * from the invitation.
+ */
+@keyframes hint-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
 @keyframes caption-rise {
   from {
     opacity: 0;
@@ -558,7 +626,7 @@
     transform: scale(1);
   }
   to {
-    transform: scale(1.016);
+    transform: scale(1.012);
   }
 }
 
@@ -619,6 +687,12 @@
   .caption-rise {
     animation: none !important;
     opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* The cue stays; only its drift stops. */
+  .scroll-hint-arrow {
+    animation: none !important;
     transform: none !important;
   }
 }

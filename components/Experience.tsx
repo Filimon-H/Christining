@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import { invitation } from "@/data/invitation";
 import EnvelopeGate from "./EnvelopeGate";
+import ScrollHint from "./ScrollHint";
 import SoundToggle from "./SoundToggle";
 
 /**
@@ -32,6 +33,10 @@ export default function Experience() {
         onOpen={handleOpen}
         onRevealed={handleRevealed}
       />
+
+      {/* Only once the cover is out of the way — it would sit over the
+          envelope otherwise. */}
+      {coverGone && <ScrollHint />}
 
       {music && audioSrc && (
         <SoundToggle

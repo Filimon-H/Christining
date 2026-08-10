@@ -22,11 +22,7 @@ export default function InvitationHero() {
     <section
       id="invitation"
       aria-labelledby="invitation-heading"
-      className="scene pb-3xl pt-2xl"
-      style={{
-        paddingTop: "calc(var(--safe-top) + 3rem)",
-        paddingBottom: "calc(var(--safe-bottom) + 4rem)",
-      }}
+      className="scene scene-snug scene-peek"
     >
       {/* Faint manuscript band, sitting in the quiet margin below the scroll
           cue. Anywhere within the text block and it crosses a line. */}
@@ -191,23 +187,6 @@ export default function InvitationHero() {
           <p className="t-body mt-xs italic">{parents.signature}</p>
         </Reveal>
 
-        {/* Scroll cue — deliberately quiet. In the flow rather than absolutely
-            positioned, so it can never sit on top of the signature when the
-            invitation is taller than the viewport. */}
-        <Reveal
-          trigger="mount"
-          delay={2.1}
-          duration={1.2}
-          className="mt-3xl flex flex-col items-center gap-xs"
-        >
-          <span
-            aria-hidden="true"
-            className="scroll-cue-drift text-lg leading-none text-accent"
-          >
-            &darr;
-          </span>
-          <span className="t-whisper">Scroll to continue</span>
-        </Reveal>
       </div>
     </section>
   );

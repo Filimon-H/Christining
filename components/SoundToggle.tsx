@@ -175,10 +175,16 @@ export default function SoundToggle({
        * Pinned bottom-left, clear of the gallery's controls, which occupy the
        * bottom centre and right.
        *
-       * It needs its own surface: a bare icon at this size disappears over a
-       * photograph, and this control sits above full-bleed images for most of
-       * the page. A cream disc with a hairline gold edge keeps it legible on
-       * both cream and photo backgrounds without shouting.
+       * It needs its own surface: a bare icon disappears over a photograph, and
+       * this control sits above full-bleed images for most of the page. A cream
+       * pill with a hairline gold edge keeps it legible on both cream and photo
+       * backgrounds without shouting.
+       *
+       * A pill with a word, not a bare icon disc: at 44px with a 17px glyph it
+       * was easy to miss and easy to misread, so guests could not tell it
+       * controlled sound and had no way to know they could silence it. The
+       * label removes the guesswork and the larger target is easier to hit
+       * one-handed.
        */}
       {visible && (
         <button
@@ -186,17 +192,21 @@ export default function SoundToggle({
           onClick={toggle}
           aria-pressed={!isMuted}
           aria-label={isMuted ? "Play sacred music" : "Mute sacred music"}
-          className="tap fixed bottom-0 left-0 z-controls rounded-full border border-accent/40 bg-surface/85 text-accent-strong shadow-sm backdrop-blur-sm transition-colors duration-ui ease-gentle hover:border-accent hover:bg-surface"
+          className="tap fixed bottom-0 left-0 z-controls gap-xs rounded-full border border-accent/50 bg-surface/90 pl-lg pr-xl text-accent-strong shadow-sm backdrop-blur-sm transition-colors duration-ui ease-gentle hover:border-accent hover:bg-surface"
           style={{
             marginBottom: "calc(var(--safe-bottom) + 1rem)",
             marginLeft: "calc(env(safe-area-inset-left, 0px) + 1rem)",
+            minHeight: "3.25rem",
           }}
         >
           {isMuted ? (
-            <VolumeX size={17} strokeWidth={1.5} aria-hidden="true" />
+            <VolumeX size={22} strokeWidth={1.6} aria-hidden="true" />
           ) : (
-            <Volume2 size={17} strokeWidth={1.5} aria-hidden="true" />
+            <Volume2 size={22} strokeWidth={1.6} aria-hidden="true" />
           )}
+          <span className="t-label text-accent-strong">
+            {isMuted ? "Play" : "Mute"}
+          </span>
         </button>
       )}
     </>

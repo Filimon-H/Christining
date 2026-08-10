@@ -15,14 +15,14 @@ import "swiper/css/effect-fade";
 
 const { gallery } = invitation;
 
-const AUTOPLAY_MS = 3000;
+const AUTOPLAY_MS = 2000;
 /*
  * The crossfade has to stay well under the dwell, or the gallery is mid-
- * transition for a third of its life and never settles on an image. At a 3s
- * dwell, 700ms leaves the photograph held still for the majority of its turn
- * while keeping the handover soft.
+ * transition for much of its life and never settles on an image. At a 2s dwell
+ * 500ms keeps three-quarters of each turn as a still photograph, which is the
+ * shortest fade that still reads as a dissolve rather than a cut.
  */
-const FADE_MS = 700;
+const FADE_MS = 500;
 const FADE_MS_REDUCED = 300;
 /** How long to stay paused after interaction before drifting on again. */
 const RESUME_AFTER_MS = 9000;
