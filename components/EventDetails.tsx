@@ -149,8 +149,17 @@ export default function EventDetails() {
                   className="mt-lg block font-ethiopic normal-case tracking-normal"
                 >
                   <span className="t-value-sub block">{church.nameAm}</span>
+                  {/*
+                   * A measure, so the directions wrap instead of running the
+                   * full width of the card. Ge'ez has no lowercase and sets
+                   * wider than Latin at the same size, so this one line reached
+                   * both edges once the type scale went up.
+                   */}
                   {church.addressLinesAm?.map((line) => (
-                    <span key={line} className="t-value-sub mt-hair block">
+                    <span
+                      key={line}
+                      className="t-value-sub mx-auto mt-hair block max-w-geez text-balance"
+                    >
                       {line}
                     </span>
                   ))}

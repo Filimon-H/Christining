@@ -38,8 +38,15 @@
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 
-  /* Scene gutter — fluid, shared by every full-width section */
-  --gutter: clamp(1.375rem, 7vw, 4rem);
+  /*
+   * Scene gutter — fluid, shared by every full-width section.
+   *
+   * 4vw rather than 7vw: on a wide phone the old value spent ~42px a side on
+   * margin, which combined with the card's max-width left the invitation looking
+   * like a small panel adrift on a large field. A narrower gutter lets the card
+   * take the width it is given, which is what makes it read as a held card.
+   */
+  --gutter: clamp(1rem, 4vw, 4rem);
 }
 
 @layer base {

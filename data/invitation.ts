@@ -163,11 +163,15 @@ export const invitation: Invitation = {
    */
   church: {
     name: "At Our Home",
+    /*
+     * The town comes first. Relatives travelling in need to know it is Adama
+     * before any of the local landmarks mean anything to them.
+     */
     addressLines: [
-      "Just in from the Africa fuel station",
+      "Adama, just in from the Africa fuel station",
       "Near Assela Menahriya",
     ],
-    locality: "Near Assela Menahriya",
+    locality: "Adama",
 
     /*
      * Amharic venue and directions.
@@ -178,7 +182,7 @@ export const invitation: Invitation = {
      * of an English address would.
      */
     nameAm: "ቤታችን",
-    addressLinesAm: ["አሰላ መናኃሪያ አካባቢ ከ አፍሪካ ማደያ ገባ ብሎ"],
+    addressLinesAm: ["አዳማ ፣ አሰላ መናኃሪያ አካባቢ ከ አፍሪካ ማደያ ገባ ብሎ"],
   },
 
   // No separate reception — the baptism celebration is the gathering at home.

@@ -120,42 +120,42 @@ export default {
       fontSize: {
         /** Uppercase eyebrow / section label */
         eyebrow: [
-          "clamp(0.6875rem, 2.9vw, 0.875rem)",
+          "clamp(0.6875rem, 3.2vw, 0.9375rem)",
           { lineHeight: "1.5", letterSpacing: "0.24em" },
         ],
         /** Small caps metadata, footer, scroll cue */
         whisper: [
-          "clamp(0.625rem, 2.6vw, 0.6875rem)",
+          "clamp(0.6875rem, 2.9vw, 0.8125rem)",
           { lineHeight: "1.6", letterSpacing: "0.2em" },
         ],
         /** Field label above a value */
         label: [
-          "clamp(0.625rem, 2.6vw, 0.6875rem)",
+          "clamp(0.6875rem, 2.9vw, 0.8125rem)",
           { lineHeight: "1.5", letterSpacing: "0.22em" },
         ],
         /** Invitation body copy */
         body: [
-          "clamp(1.0625rem, 4.6vw, 1.4375rem)",
+          "clamp(1.0625rem, 5vw, 1.5rem)",
           { lineHeight: "1.65", letterSpacing: "0" },
         ],
         /** Date, church, detail values */
         value: [
-          "clamp(1.125rem, 4.8vw, 1.375rem)",
+          "clamp(1.125rem, 5.2vw, 1.5rem)",
           { lineHeight: "1.5", letterSpacing: "0" },
         ],
         /** Countdown numerals */
         numeral: [
-          "clamp(1.375rem, 6vw, 1.875rem)",
+          "clamp(1.5rem, 6.4vw, 2rem)",
           { lineHeight: "1.2", letterSpacing: "0.02em" },
         ],
         /** Blessing / closing verse */
         verse: [
-          "clamp(1.25rem, 5.4vw, 1.875rem)",
+          "clamp(1.375rem, 5.8vw, 2rem)",
           { lineHeight: "1.45", letterSpacing: "0" },
         ],
         /** Scripture, the largest quoted text */
         scripture: [
-          "clamp(1.375rem, 6vw, 2.375rem)",
+          "clamp(1.5rem, 6.6vw, 2.5rem)",
           { lineHeight: "1.45", letterSpacing: "0" },
         ],
         /**
@@ -167,7 +167,7 @@ export default {
          * even an unusually long name wraps instead of bleeding off the edge.
          */
         name: [
-          "clamp(2.375rem, 11vw, 5.5rem)",
+          "clamp(2.5rem, 12vw, 5.5rem)",
           { lineHeight: "1.06", letterSpacing: "0.005em" },
         ],
         /** Step-down for names longer than ~12 characters. */
@@ -185,6 +185,8 @@ export default {
         closing: "32rem",
         /** The envelope cover — nearly full-bleed on a phone, generous on desktop */
         envelope: "40rem",
+        /** Ge'ez directions — a measure so they wrap rather than run edge to edge */
+        geez: "22ch",
         /** Divider widths */
         "rule-sm": "7rem",
         "rule-md": "9rem",

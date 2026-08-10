@@ -15,11 +15,21 @@ import { useEffect, useState } from "react";
  * scrolls. Pointer-inert, so it never intercepts a tap.
  */
 export default function ScrollHint() {
-  const [hidden, setHidden] = useState(true);
+  /*
+   * `null` until the client decides, and nothing renders in that state.
+   *
+   * Rendering the element with a `data-hidden` that an effect then flips gave a
+   * hydration mismatch: the server produced one attribute value and the client
+   * another. Returning null on the server side of the first paint keeps the two
+   * trees identical, and the cue appears a frame later — imperceptible, since it
+   * fades in anyway.
+   */
+  const [hidden, setHidden] = useState<boolean | null>(null);
 
   useEffect(() => {
     // Only offer the cue when there is somewhere to scroll to.
     if (document.documentElement.scrollHeight <= window.innerHeight + 40) {
+      setHidden(true);
       return;
     }
 
@@ -35,6 +45,10 @@ export default function ScrollHint() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Nothing on the server, and nothing until the client knows whether the page
+  // actually scrolls.
+  if (hidden === null) return null;
 
   return (
     <div
