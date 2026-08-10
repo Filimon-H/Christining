@@ -129,7 +129,7 @@ export const invitation: Invitation = {
   },
 
   parents: {
-    names: "Nardos Mesfin & Filimon Haylemariyam",
+    names: "Filimon Haylemariyam & Nardos Mesfin",
     signature: "Mommy & Daddy",
   },
 
