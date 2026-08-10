@@ -209,9 +209,14 @@
   .scene-snug {
     min-height: auto;
     /* Fluid, and carrying the safe-area insets that used to sit in an inline
-       style on each section — an inline style would override this class. */
-    padding-top: calc(var(--safe-top) + clamp(3rem, 8svh, 5.5rem));
-    padding-bottom: calc(var(--safe-bottom) + clamp(3rem, 8svh, 5.5rem));
+       style on each section — an inline style would override this class.
+
+       The floor is 1.5rem rather than 3rem: the card is already at ~92% of a
+       phone's width, so what was left over on a tall screen was vertical, not
+       horizontal — bands of bare cream above and below a card floating in the
+       middle. Less padding lets the card sit closer to filling the screen. */
+    padding-top: calc(var(--safe-top) + clamp(1.5rem, 5svh, 5.5rem));
+    padding-bottom: calc(var(--safe-bottom) + clamp(1.5rem, 5svh, 5.5rem));
   }
 
   /*

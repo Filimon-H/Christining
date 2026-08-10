@@ -133,15 +133,19 @@ export default {
           "clamp(0.6875rem, 2.9vw, 0.8125rem)",
           { lineHeight: "1.5", letterSpacing: "0.22em" },
         ],
+        /* Body and value carry most of the card's height, so their vw term is
+           what decides whether the invitation fills a phone screen or floats in
+           the middle of it. Stepped up from 5vw/5.2vw, with the ceiling left
+           where it was so desktop is unaffected. */
         /** Invitation body copy */
         body: [
-          "clamp(1.0625rem, 5vw, 1.5rem)",
-          { lineHeight: "1.65", letterSpacing: "0" },
+          "clamp(1.0625rem, 5.6vw, 1.5rem)",
+          { lineHeight: "1.6", letterSpacing: "0" },
         ],
         /** Date, church, detail values */
         value: [
-          "clamp(1.125rem, 5.2vw, 1.5rem)",
-          { lineHeight: "1.5", letterSpacing: "0" },
+          "clamp(1.125rem, 5.8vw, 1.5rem)",
+          { lineHeight: "1.45", letterSpacing: "0" },
         ],
         /** Countdown numerals */
         numeral: [
@@ -155,8 +159,8 @@ export default {
         ],
         /** Scripture, the largest quoted text */
         scripture: [
-          "clamp(1.5rem, 6.6vw, 2.5rem)",
-          { lineHeight: "1.45", letterSpacing: "0" },
+          "clamp(1.5rem, 7.4vw, 2.5rem)",
+          { lineHeight: "1.4", letterSpacing: "0" },
         ],
         /**
          * The child's name — the single display size.
