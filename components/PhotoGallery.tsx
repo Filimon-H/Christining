@@ -24,8 +24,14 @@ const AUTOPLAY_MS = 2000;
  */
 const FADE_MS = 500;
 const FADE_MS_REDUCED = 300;
-/** How long to stay paused after interaction before drifting on again. */
-const RESUME_AFTER_MS = 9000;
+/**
+ * How long to stay paused after interaction before drifting on again.
+ *
+ * 4s rather than 9s: the pause exists so a guest studying one photograph is not
+ * interrupted, but at 9s the gallery felt broken rather than considerate — long
+ * enough that most people concluded it did not advance on its own at all.
+ */
+const RESUME_AFTER_MS = 4000;
 
 /**
  * Scene 4 — the cinematic slideshow.
@@ -56,6 +62,20 @@ export default function PhotoGallery() {
     }
   }, []);
 
+  /*
+   * The guest's play/pause choice, mirrored into a ref.
+   *
+   * The resume timer below fires seconds after it is scheduled and must read
+   * the choice as it stands *then*. Reading the state variable would capture
+   * its value at scheduling time, and because `pauseTemporarily` is rebuilt
+   * whenever `playing` changes, an in-flight timer would keep a stale copy and
+   * either resume a gallery the guest had paused or leave a playing one stopped.
+   */
+  const playingRef = useRef(playing);
+  useEffect(() => {
+    playingRef.current = playing;
+  }, [playing]);
+
   /** Pause now; drift back to autoplay once the guest goes quiet. */
   const pauseTemporarily = useCallback(() => {
     const swiper = swiperRef.current;
@@ -66,11 +86,11 @@ export default function PhotoGallery() {
 
     resumeTimer.current = window.setTimeout(() => {
       // Respect an explicit pause, and never fight a motion preference.
-      if (swiperRef.current?.autoplay && playing && !reducedMotion) {
+      if (swiperRef.current?.autoplay && playingRef.current && !reducedMotion) {
         swiperRef.current.autoplay.start();
       }
     }, RESUME_AFTER_MS);
-  }, [clearResumeTimer, playing, reducedMotion]);
+  }, [clearResumeTimer, reducedMotion]);
 
   const togglePlaying = useCallback(() => {
     const swiper = swiperRef.current;
@@ -132,8 +152,14 @@ export default function PhotoGallery() {
       className="relative h-svh w-full max-w-full overflow-hidden bg-surface-alt"
       // Focus entering the gallery pauses drift, so a guest reading with the
       // keyboard is never interrupted mid-photograph.
+      //
+      // Deliberately no `onPointerDown` here. It was pausing autoplay on *any*
+      // touch inside the section — including the touch that scrolls the page
+      // past it — so on a phone the gallery stopped the instant a finger landed
+      // and, with a fresh touch resetting the timer each time, effectively never
+      // advanced on its own. A real swipe is caught by Swiper's own
+      // `onTouchEnd` below, which is the only pointer gesture that should pause.
       onFocus={pauseTemporarily}
-      onPointerDown={pauseTemporarily}
     >
       {/* Before Swiper mounts, the first photograph stands in. Identical
           framing, so the handover causes no visible shift. */}
@@ -182,6 +208,21 @@ export default function PhotoGallery() {
         }
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
+          /*
+           * Swiper mounts here only once the section nears the viewport, and
+           * when it initialises while still off-screen its autoplay can settle
+           * in a stopped state. Starting it explicitly on the next frame — once
+           * the deck has measured — guarantees the gallery is already drifting
+           * by the time the guest arrives at it.
+           */
+          if (!reducedMotion && playingRef.current) {
+            requestAnimationFrame(() => swiper.autoplay?.start());
+          }
+        }}
+        // Fires only when the guest actually dragged the deck, not when they
+        // merely touched it in the course of scrolling the page.
+        onTouchEnd={(swiper) => {
+          if (swiper.touches.diff !== 0) pauseTemporarily();
         }}
         onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
         className="h-full w-full"
